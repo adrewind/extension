@@ -1,13 +1,13 @@
 {
-  "name": "CHANGE THIS : Extension boilerplate",
+  "name": "ADRewind for Youtube™",
   "version": "0.0.1",
   "manifest_version": 2,
-  "description": "This extension block annoying ad inside youtube videos",
+  "description": "This plugin skips video fragments with an advertisement placed by an author.",
   "homepage_url": "http://extensionizr.com",
   "icons": {
-    "16": "icons/icon16.png",
-    "48": "icons/icon48.png",
-    "128": "icons/icon128.png"
+    "16": "icons/fullicon16.png",
+    "48": "icons/fullicon48.png",
+    "128": "icons/fullicon128.png"
   },
   "default_locale": "en",
   "background": {
@@ -31,6 +31,7 @@
         "https://www.youtube.com/*"
       ],
       "js": [
+        "src/inject/player.js",
         "src/inject/inject.js"
       ]
     }
