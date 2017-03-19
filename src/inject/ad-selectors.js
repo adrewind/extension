@@ -18,9 +18,13 @@ class Playhead {
     }
 
     handleMove() {
+
+        function applyConstraints(value, min, max) {
+            return Math.max(min, Math.min(max, value));
+        }
+
         this.element.addEventListener("mousedown", (e) => {
             e.preventDefault();
-            this.element.style.transition = '';
 
             this.body.addEventListener("mouseup", mouseup);
             this.body.addEventListener("mousemove", mousemove);
@@ -39,7 +43,7 @@ class Playhead {
             const rect = this.container.getBoundingClientRect();
             const diff = e.clientX - rect.left;
             const percent = diff / rect.width;
-            const value = Math.max(0, Math.min(1, percent));
+            const value = applyConstraints(percent, 0, 1);
 
             this.onchange(value);
         }
@@ -57,6 +61,9 @@ class FragmentSelection {
         this.timeline = adrElements.controlsContainer;
         this.element = this.createElement();
         this.dead = false;
+
+        this.leftNeightbor = null;
+        this.rightNeightbor = null;
 
         this.handleDrag();
     }
@@ -120,6 +127,9 @@ class FragmentSelection {
             const alive = this.element.style.opacity > 0.1;
 
             if (alive) {
+                setTimeout(() => {
+                    this.element.style.transition = '';
+                }, 700)
                 this.element.style.transition = '700ms ease';
                 this.element.style.top = '0px';
                 this.element.style.opacity = '1';
@@ -159,6 +169,7 @@ class FragmentSelectionBar {
 
     constructor() {
         this.fragments = [];
+        this.recording = false;
         this.element = this.createElement();
         this.container = adrElements.controlsContainer;
         this.video = adrElements.video;
@@ -208,15 +219,27 @@ class FragmentSelectionBar {
         return sel;
     }
 
+    findFragmentAt(time) {
+        for(let i=0; i < this.fragments.length; ++i) {
+            const fragment = this.fragments[i];
+            const {start, end} = fragment;
+
+            if (start <= time && time <= end && !fragment.dead) {
+                return fragment;
+            }
+        }
+        return null;
+    }
+
     followPlayback(fragment) {
         fragment.start = this.video.currentTime;
         fragment.end = this.video.currentTime;
 
         this.video.play();
         fragment.redraw();
-        fragment.element.style.opacity = '1';
-        fragment.element.style.transition = '700ms ease opacity'
-
+        fragment.element.style.opacity = 1;
+        this.helpText.innerText = "Нажми сюда чтобы остановить запись";
+        this.recording = true;
 
         const timeupdate = () => {
             fragment.end = this.video.currentTime;
@@ -226,6 +249,8 @@ class FragmentSelectionBar {
             this.video.removeEventListener("ended", pause);
             this.video.removeEventListener("pause", pause);
             this.video.removeEventListener("timeupdate", timeupdate);
+            this.helpText.innerText = "Жми сюда когда начнется реклама";
+            this.recording = false;
         }
 
         this.video.addEventListener("ended", pause);
@@ -234,20 +259,20 @@ class FragmentSelectionBar {
     }
 
     handleBarClick() {
-        let follow = null;
 
-        this.helpText.addEventListener('click', () => {
-            console.log("CLICK BAR");
+        this.helpText.addEventListener('click', (e) => {
+            e.preventDefault();
 
-            if(follow) {
-                this.video.pause();
-                follow = null;
-                this.helpText.innerText = "Жми сюда когда начнется реклама";
-            } else {
-                follow = this.addFragment();
-                this.followPlayback(follow);
-                this.helpText.innerText = "Нажми сюда чтобы остановить запись"
-            }
+            const found = this.findFragmentAt(this.video.currentTime);
+            if(found)
+                return;
+
+            if(this.recording)
+                return this.video.pause();
+
+            const fragment = this.addFragment();
+            this.followPlayback(fragment);
+            this.video.play();
         });
     }
 
