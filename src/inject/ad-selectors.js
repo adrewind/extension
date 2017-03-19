@@ -7,6 +7,9 @@ class Playhead {
         this.container = adrElements.controlsContainer;
         this.onchange = callback;
 
+        this.leftWall = 0;
+        this.rightWall = 1;
+
         this.element = this.createElement();
         this.handleMove();
     }
@@ -43,12 +46,16 @@ class Playhead {
             const rect = this.container.getBoundingClientRect();
             const diff = e.clientX - rect.left;
             const percent = diff / rect.width;
-            const value = applyConstraints(percent, 0, 1);
+            const value = applyConstraints(percent, this.leftWall, this.rightWall);
 
             this.onchange(value);
         }
     }
 
+    setConstrains(left, right) {
+        this.leftWall = Math.max(0, left);
+        this.rightWall = Math.min(1, right);
+    }
 }
 
 
@@ -104,7 +111,7 @@ class FragmentSelection {
         this.video.currentTime = position;
     }
 
-    // Delete gesture
+    // Deletion gesture
     handleDrag() {
         let pos = 0;
         const body = document.getElementsByTagName('body')[0];
