@@ -94,8 +94,6 @@ class FragmentSelection {
         selection.appendChild(this.leftPlayhead.element);
         selection.appendChild(this.rightPlayhead.element);
 
-        this.background = background;
-
         return selection;
     }
 
@@ -126,7 +124,7 @@ class FragmentSelection {
     // Deletion gesture
     handleDrag() {
         let pos = 0;
-        const body = document.getElementsByTagName('body')[0];
+        const body = adrElements.body;
 
         const mousemove = (e) => {
             e.preventDefault();
@@ -157,9 +155,15 @@ class FragmentSelection {
             }, 800);
         };
 
-        this.background.addEventListener('mousedown', (e) => {
+        this.element.addEventListener('mousedown', (e) => {
             pos = e.clientY;
             e.preventDefault();
+
+            const leftPlayhead = e.target === this.leftPlayhead.element;
+            const rightPlayhead = e.target === this.rightPlayhead.element;
+            if (leftPlayhead || rightPlayhead) {
+                return;
+            }
 
             this.element.style.transition = '';
             body.addEventListener('mouseup', mouseup);
