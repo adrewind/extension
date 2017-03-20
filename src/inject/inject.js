@@ -91,6 +91,7 @@ chrome.extension.sendMessage({}, function(response) {
                 if (!fragments) {
                     return;
                 }
+                bar.loadNewFragments(fragments);
                 jumper.updateFragments(fragments);
                 jumper.enable();
             });

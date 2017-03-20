@@ -139,18 +139,16 @@ class FragmentSelection {
             body.removeEventListener('mousemove', mousemove);
 
             const alive = this.element.style.opacity > 0.1;
-
-            if (alive) {
-                setTimeout(() => {
-                    this.element.style.transition = '';
-                }, 700);
-                this.element.style.transition = '700ms ease';
-                this.element.style.top = '0px';
-                this.element.style.opacity = '1';
-            } else {
-                this.dead = true;
-                this.element.remove();
+            if (!alive) {
+                return this.destroy();
             }
+
+            this.element.style.top = '0px';
+            this.element.style.opacity = '1';
+            this.element.style.transition = '700ms ease';
+            setTimeout(() => {
+                this.element.style.transition = '';
+            }, 800);
         };
 
         this.background.addEventListener('mousedown', (e) => {
@@ -174,6 +172,11 @@ class FragmentSelection {
 
         this.element.style.transform = `translateX(${start}px)`;
         this.element.style.width = `${end - start}px`;
+    }
+
+    destroy() {
+        this.dead = true;
+        this.element.remove();
     }
 }
 
@@ -291,6 +294,23 @@ class FragmentSelectionBar {
 
     handlePlayerResize() {
         adrObserver.onPlayerResize(() => this.redrawAllFragments());
+    }
+
+    removeAllFragments() {
+        this.fragments.forEach(f => f.destroy());
+        this.fragments = [];
+    }
+
+    loadNewFragments(rawFragments) {
+        this.removeAllFragments();
+        rawFragments.forEach(f => {
+            const [start, end] = f;
+            const fragment = this.addFragment();
+
+            fragment.setStartPosition(start);
+            fragment.setEndPosition(end);
+            fragment.redraw();
+        });
     }
 
     redrawAllFragments() {
