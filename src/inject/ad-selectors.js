@@ -15,29 +15,14 @@ class Playhead {
     }
 
     createElement() {
-        const element = document.createElement("div");
+        const element = document.createElement('div');
         element.classList.add(`adr-playhead-${this.side}`);
         return element;
     }
 
     handleMove() {
-
         function applyConstraints(value, min, max) {
             return Math.max(min, Math.min(max, value));
-        }
-
-        this.element.addEventListener("mousedown", (e) => {
-            e.preventDefault();
-
-            this.body.addEventListener("mouseup", mouseup);
-            this.body.addEventListener("mousemove", mousemove);
-        });
-
-        const mouseup = (e) => {
-            e.preventDefault();
-
-            this.body.removeEventListener("mouseup", mouseup);
-            this.body.removeEventListener("mousemove", mousemove);
         }
 
         const mousemove = (e) => {
@@ -49,7 +34,21 @@ class Playhead {
             const value = applyConstraints(percent, this.leftWall, this.rightWall);
 
             this.onchange(value);
-        }
+        };
+
+        const mouseup = (e) => {
+            e.preventDefault();
+
+            this.body.removeEventListener('mouseup', mouseup);
+            this.body.removeEventListener('mousemove', mousemove);
+        };
+
+        this.element.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+
+            this.body.addEventListener('mouseup', mouseup);
+            this.body.addEventListener('mousemove', mousemove);
+        });
     }
 
     setConstrains(left, right) {
@@ -76,26 +75,25 @@ class FragmentSelection {
     }
 
     createElement() {
-        const selection = document.createElement("div");
-        const background = document.createElement("div");
+        const selection = document.createElement('div');
+        const background = document.createElement('div');
 
-        selection.classList.add("adr-ad-selection");
-        background.classList.add("adr-sel-bg");
+        selection.classList.add('adr-ad-selection');
+        background.classList.add('adr-sel-bg');
 
-        this.leftPlayhead = new Playhead('left', (p) => this.setStartPosition(p));
-        this.rightPlayhead = new Playhead('right', (p) => this.setEndPosition(p));
+        this.leftPlayhead = new Playhead('left', p => this.setStartPercent(p));
+        this.rightPlayhead = new Playhead('right', p => this.setEndPercent(p));
 
         selection.appendChild(background);
         selection.appendChild(this.leftPlayhead.element);
         selection.appendChild(this.rightPlayhead.element);
 
         this.background = background;
-        selection.style.opacity = '0';
 
         return selection;
     }
 
-    setStartPosition(percent) {
+    setStartPercent(percent) {
         const position = this.video.duration * percent;
         this.start = position;
         this.redraw();
@@ -103,7 +101,7 @@ class FragmentSelection {
     }
 
 
-    setEndPosition(percent) {
+    setEndPercent(percent) {
         const duration = this.video.duration;
         const position = Math.max(this.start, duration * percent);
         this.end = position;
@@ -111,32 +109,41 @@ class FragmentSelection {
         this.video.currentTime = position;
     }
 
+    setStartPosition(time) {
+        this.start = time;
+    }
+
+    setEndPosition(time) {
+        this.end = time;
+    }
+
     // Deletion gesture
     handleDrag() {
         let pos = 0;
         const body = document.getElementsByTagName('body')[0];
 
-        this.background.addEventListener("mousedown", (e) => {
-            pos = e.clientY;
+        const mousemove = (e) => {
             e.preventDefault();
 
-            this.element.style.transition = '';
-            body.addEventListener("mouseup", mouseup);
-            body.addEventListener("mousemove", mousemove);
-        });
+            const distance = Math.min(e.clientY - pos, 0);
+            const opacity = 1 + (distance / 100);
+
+            this.element.style.top = `${distance}px`;
+            this.element.style.opacity = opacity;
+        };
 
         const mouseup = (e) => {
             e.preventDefault();
 
-            body.removeEventListener("mouseup", mouseup);
-            body.removeEventListener("mousemove", mousemove);
+            body.removeEventListener('mouseup', mouseup);
+            body.removeEventListener('mousemove', mousemove);
 
             const alive = this.element.style.opacity > 0.1;
 
             if (alive) {
                 setTimeout(() => {
                     this.element.style.transition = '';
-                }, 700)
+                }, 700);
                 this.element.style.transition = '700ms ease';
                 this.element.style.top = '0px';
                 this.element.style.opacity = '1';
@@ -146,15 +153,14 @@ class FragmentSelection {
             }
         };
 
-        const mousemove = (e) => {
+        this.background.addEventListener('mousedown', (e) => {
+            pos = e.clientY;
             e.preventDefault();
 
-            const distance = Math.min(e.clientY - pos, 0);
-            const opacity = 1 + distance / 100;
-
-            this.element.style.top = `${distance}px`;
-            this.element.style.opacity = opacity;
-        }
+            this.element.style.transition = '';
+            body.addEventListener('mouseup', mouseup);
+            body.addEventListener('mousemove', mousemove);
+        });
     }
 
     redraw() {
@@ -163,8 +169,8 @@ class FragmentSelection {
 
         // TODO: hide if duration is unavialable
 
-        const start = this.start / duration * timelineWidth;
-        const end = this.end / duration * timelineWidth;
+        const start = (this.start / duration) * timelineWidth;
+        const end = (this.end / duration) * timelineWidth;
 
         this.element.style.transform = `translateX(${start}px)`;
         this.element.style.width = `${end - start}px`;
@@ -197,7 +203,7 @@ class FragmentSelectionBar {
     }
 
     toggle() {
-        if (this.element.style.display == 'none') {
+        if (this.element.style.display === 'none') {
             this.show();
         } else {
             this.hide();
@@ -205,12 +211,12 @@ class FragmentSelectionBar {
     }
 
     createElement() {
-        const menu = document.createElement("div");
-        menu.classList.add("adr-ad-sel-menu");
+        const menu = document.createElement('div');
+        menu.classList.add('adr-ad-sel-menu');
 
-        const help = document.createElement("div");
-        help.classList.add("adr-ad-help-text");
-        help.innerText = "Жми сюда когда начнется реклама";
+        const help = document.createElement('div');
+        help.classList.add('adr-ad-help-text');
+        help.innerText = 'Жми сюда когда начнется реклама';
         this.helpText = help;
 
         menu.appendChild(help);
@@ -227,59 +233,57 @@ class FragmentSelectionBar {
     }
 
     findFragmentAt(time) {
-        for(let i=0; i < this.fragments.length; ++i) {
-            const fragment = this.fragments[i];
-            const {start, end} = fragment;
+        const alive = this.fragments.filter(f => f.alive);
+        const found = alive.filter(({ start, end }) => start <= time && time <= end);
 
-            if (start <= time && time <= end && !fragment.dead) {
-                return fragment;
-            }
-        }
-        return null;
+        return found[0] || null;
     }
 
     followPlayback(fragment) {
-        fragment.start = this.video.currentTime;
-        fragment.end = this.video.currentTime;
+        fragment.setStartPosition(this.video.currentTime);
+        fragment.setEndPosition(this.video.currentTime);
 
         this.video.play();
         fragment.redraw();
-        fragment.element.style.opacity = 1;
-        this.helpText.innerText = "Нажми сюда чтобы остановить запись";
+        this.helpText.innerText = 'Нажми сюда чтобы остановить запись';
         this.recording = true;
 
         const timeupdate = () => {
-            fragment.end = this.video.currentTime;
+            fragment.setEndPosition(this.video.currentTime);
             fragment.redraw();
-        }
-        const pause = () => {
-            this.video.removeEventListener("ended", pause);
-            this.video.removeEventListener("pause", pause);
-            this.video.removeEventListener("timeupdate", timeupdate);
-            this.helpText.innerText = "Жми сюда когда начнется реклама";
-            this.recording = false;
-        }
+        };
 
-        this.video.addEventListener("ended", pause);
-        this.video.addEventListener("pause", pause);
-        this.video.addEventListener("timeupdate", timeupdate);
+        const pause = () => {
+            this.video.removeEventListener('ended', pause);
+            this.video.removeEventListener('pause', pause);
+            this.video.removeEventListener('timeupdate', timeupdate);
+            this.helpText.innerText = 'Жми сюда когда начнется реклама';
+            this.recording = false;
+        };
+
+        this.video.addEventListener('ended', pause);
+        this.video.addEventListener('pause', pause);
+        this.video.addEventListener('timeupdate', timeupdate);
     }
 
     handleBarClick() {
-
         this.helpText.addEventListener('click', (e) => {
             e.preventDefault();
 
             const found = this.findFragmentAt(this.video.currentTime);
-            if(found)
-                return;
+            if (found) {
+                return null;
+            }
 
-            if(this.recording)
+            if (this.recording) {
                 return this.video.pause();
+            }
 
             const fragment = this.addFragment();
             this.followPlayback(fragment);
             this.video.play();
+
+            return null;
         });
     }
 
@@ -288,7 +292,14 @@ class FragmentSelectionBar {
     }
 
     redrawAllFragments() {
-        this.fragments.forEach((fragment) => fragment.redraw());
+        this.fragments.forEach(fragment => fragment.redraw());
+    }
+
+    exportFragments() {
+        const alive = this.fragments.filter(f => f.alive);
+        const frags = alive.map(({ start, end }) => [start, end]);
+
+        return frags;
     }
 
 }
