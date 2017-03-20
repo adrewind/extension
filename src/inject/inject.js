@@ -3,7 +3,7 @@ function getVideoID() {
     function youtubeUrlParser(url) {
         const exp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&\?]*).*/;
         const match = url.match(exp);
-        return (match && match[7].length === 11) ? match[7] : false;
+        return (match && match[7].length === 11) ? match[7] : null;
     }
 
     return youtubeUrlParser(document.URL);
@@ -28,6 +28,14 @@ chrome.extension.sendMessage({}, () => {
         const conts = new AdditionalControls();
         const bar = new FragmentSelectionBar();
 
+        bar.onchanged = () => {
+            console.log(bar);
+            console.log(info);
+            const videoID = getVideoID();
+            const fragments = bar.exportFragments();
+            info.update(videoID, fragments);
+        }
+
         conts.button.addEventListener('click', () => {
             jumper.disable();
 
@@ -45,8 +53,16 @@ chrome.extension.sendMessage({}, () => {
 
         const loadData = () => {
             const videoID = getVideoID();
+            if (videoID === null) {
+                return;
+            }
+
+            bar.removeAllFragments();
+            jumper.updateFragments([]);
+
+            console.log("LOADING", videoID);
             info.load(videoID).then(({ fragments }) => {
-                console.log('LOAD', fragments);
+                console.log('LOAD', videoID, fragments);
                 if (!fragments) {
                     return;
                 }
