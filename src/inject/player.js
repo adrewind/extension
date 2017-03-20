@@ -21,7 +21,7 @@ class ADJumper {
     }
 
     seekTo(position) {
-        // console.log("SEEKING to " + position)
+        // console.log('SEEKING to ' + position)
         this.video.currentTime = position;
     }
 
@@ -30,23 +30,27 @@ class ADJumper {
     }
 
     handleEvents() {
-        this.video.addEventListener("timeupdate", () => this.onTimeUpdate());
+        this.video.addEventListener('timeupdate', () => this.onTimeUpdate());
     }
 
     onTimeUpdate() {
-        if (!this.active)
+        if (!this.active) {
             return;
+        }
 
         const reserve = 0.25; // seconds
         const current = this.video.currentTime;
 
-        for(let i=0; i < this.skip.length; ++i) {
+        // TODO: use more efficient algorithm
+        for (let i = 0; i < this.skip.length; i += 1) {
             const [start, end] = this.skip[i];
 
-            if(start > current || current > end - reserve)
+            if (start > current || current > end - reserve) {
                 continue;
+            }
 
-            return this.seekTo(end);
+            this.seekTo(end);
+            break;
         }
     }
 
