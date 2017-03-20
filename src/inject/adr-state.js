@@ -3,22 +3,21 @@
 class ADRElements {
 
     constructor() {
-        this.body = this.findBody();
-        this.video = this.findVideoTag();
-        this.controlsContainer = this.findControlsContainer();
-    }
+        function findBody() {
+            return document.getElementsByTagName('body')[0];
+        }
 
+        function findVideoTag() {
+            return document.getElementsByTagName('video')[0];
+        }
 
-    findBody() {
-        return document.getElementsByTagName('body')[0];
-    }
+        function findControlsContainer() {
+            return document.getElementsByClassName('ytp-chrome-bottom')[0];
+        }
 
-    findVideoTag() {
-        return document.getElementsByTagName("video")[0];
-    }
-
-    findControlsContainer() {
-        return document.getElementsByClassName("ytp-chrome-bottom")[0];
+        this.body = findBody();
+        this.video = findVideoTag();
+        this.controlsContainer = findControlsContainer();
     }
 }
 
@@ -31,15 +30,22 @@ class ADRObserver {
         const observer = new MutationObserver(callback);
         const config = {
             attributes: true,
-            attributeFilter: ["style"]
+            attributeFilter: ['style'],
         };
         observer.observe(adrElements.video, config);
 
         return observer;
     }
 
-    onVideoTimeupdate(callback) {
+    onSRCChanged(callback) {
+        const observer = new MutationObserver(callback);
+        const config = {
+            attributes: true,
+            attributeFilter: ['src'],
+        };
+        observer.observe(adrElements.video, config);
 
+        return observer;
     }
 }
 

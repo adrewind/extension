@@ -1,10 +1,19 @@
 
-class Player {
+class ADJumper {
 
     constructor() {
         this.skip = [];
+        this.active = true;
         this.findVideoTag();
         this.handleEvents();
+    }
+
+    enable() {
+        this.active = true;
+    }
+
+    disable() {
+        this.active = false;
     }
 
     findVideoTag() {
@@ -25,6 +34,9 @@ class Player {
     }
 
     onTimeUpdate() {
+        if (!this.active)
+            return;
+
         const reserve = 0.25; // seconds
         const current = this.video.currentTime;
 
@@ -36,5 +48,9 @@ class Player {
 
             return this.seekTo(end);
         }
+    }
+
+    updateFragments(skip) {
+        this.skip = skip;
     }
 }

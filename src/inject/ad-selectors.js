@@ -203,11 +203,13 @@ class FragmentSelectionBar {
     }
 
     toggle() {
-        if (this.element.style.display === 'none') {
+        const hidden = this.element.style.display === 'none';
+        if (hidden) {
             this.show();
         } else {
             this.hide();
         }
+        return !hidden;
     }
 
     createElement() {
@@ -233,7 +235,7 @@ class FragmentSelectionBar {
     }
 
     findFragmentAt(time) {
-        const alive = this.fragments.filter(f => f.alive);
+        const alive = this.fragments.filter(f => !f.dead);
         const found = alive.filter(({ start, end }) => start <= time && time <= end);
 
         return found[0] || null;
@@ -296,10 +298,9 @@ class FragmentSelectionBar {
     }
 
     exportFragments() {
-        const alive = this.fragments.filter(f => f.alive);
+        const alive = this.fragments.filter(f => !f.dead);
         const frags = alive.map(({ start, end }) => [start, end]);
 
-        return frags;
+        return frags.sort((a, b) => a.start - b.start);
     }
-
 }

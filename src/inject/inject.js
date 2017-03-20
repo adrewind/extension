@@ -42,6 +42,17 @@ class AdditionalControls {
 }
 
 
+function getVideoID() {
+    function youtube_url_parser(url){
+        var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+        var match = url.match(regExp);
+        return (match&&match[7].length==11)? match[7] : false;
+    }
+
+    return youtube_url_parser(document.URL);
+}
+
+
 chrome.extension.sendMessage({}, function(response) {
 	var readyStateCheckInterval = setInterval(function() {
 	if (document.readyState === "complete") {
@@ -52,16 +63,46 @@ chrome.extension.sendMessage({}, function(response) {
 		console.log("Hello. This message was sent from scripts/inject.js");
 		// ----------------------------------------------------------
 
+        console.log(chrome.storage);
+
+        const info = new ADInfo();
+        const jumper = new ADJumper();
         const conts = new AdditionalControls();
-        const player = new Player();
         const bar = new FragmentSelectionBar();
-        player.skipFragmet(50, 52);
 
+        conts.button.addEventListener('click', () => {
+            jumper.disable();
 
-        conts.button.addEventListener('click', () => bar.toggle())
+            const shown = bar.toggle();
+            if (!shown)
+                return;
 
-        window.addEventListener("popstate", () => console.log("popstate", document.URL));
-        window.addEventListener("popstate", () => console.log("duck", document.URL));
+            const videoID = getVideoID();
+            const fragments = bar.exportFragments();
+            info.update(videoID, fragments);
+            jumper.updateFragments(fragments);
+            jumper.enable();
+        });
+
+        const loadData = () => {
+            const videoID = getVideoID();
+            info.load(videoID).then(({fragments}) => {
+                console.log("LOAD", fragments);
+                if (!fragments) {
+                    return;
+                }
+                jumper.updateFragments(fragments);
+                jumper.enable();
+            });
+            console.log(videoID);
+        };
+
+        loadData();
+
+        adrObserver.onSRCChanged(loadData);
+
+        // window.addEventListener("popstate", () => console.log("popstate", document.URL));
+        // window.addEventListener("popstate", () => console.log("duck", document.URL));
 
 
 
