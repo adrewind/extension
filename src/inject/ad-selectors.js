@@ -6,6 +6,7 @@ class Playhead {
         this.body = adrElements.body;
         this.container = adrElements.controlsContainer;
         this.onchange = callback;
+        this.onchanged = () => null;
 
         this.leftWall = 0;
         this.rightWall = 1;
@@ -39,6 +40,7 @@ class Playhead {
         const mouseup = (e) => {
             e.preventDefault();
 
+            this.onchanged();
             this.body.removeEventListener('mouseup', mouseup);
             this.body.removeEventListener('mousemove', mousemove);
         };
@@ -67,6 +69,7 @@ class FragmentSelection {
         this.timeline = adrElements.controlsContainer;
         this.element = this.createElement();
         this.dead = false;
+        this.onchanged = () => null;
 
         this.leftNeightbor = null;
         this.rightNeightbor = null;
@@ -83,6 +86,9 @@ class FragmentSelection {
 
         this.leftPlayhead = new Playhead('left', p => this.setStartPercent(p));
         this.rightPlayhead = new Playhead('right', p => this.setEndPercent(p));
+
+        this.leftPlayhead.onchanged = () => this.onchanged();
+        this.rightPlayhead.onchanged = () => this.onchanged();
 
         selection.appendChild(background);
         selection.appendChild(this.leftPlayhead.element);
@@ -175,6 +181,7 @@ class FragmentSelection {
     }
 
     destroy() {
+        this.onchanged();
         this.dead = true;
         this.element.remove();
     }
@@ -189,6 +196,7 @@ class FragmentSelectionBar {
         this.element = this.createElement();
         this.container = adrElements.controlsContainer;
         this.video = adrElements.video;
+        this.onchanged = () => null;
 
         this.hide();
         this.container.appendChild(this.element);
@@ -221,7 +229,7 @@ class FragmentSelectionBar {
 
         const help = document.createElement('div');
         help.classList.add('adr-ad-help-text');
-        help.innerText = 'Жми сюда когда начнется реклама';
+        help.innerText = chrome.i18n.getMessage("button_add_new_fragment");
         this.helpText = help;
 
         menu.appendChild(help);
@@ -233,6 +241,8 @@ class FragmentSelectionBar {
         const sel = new FragmentSelection();
         this.fragments.push(sel);
         this.element.appendChild(sel.element);
+
+        sel.onchanged = () => this.onchanged();
 
         return sel;
     }
@@ -250,7 +260,7 @@ class FragmentSelectionBar {
 
         this.video.play();
         fragment.redraw();
-        this.helpText.innerText = 'Нажми сюда чтобы остановить запись';
+        this.helpText.innerText = chrome.i18n.getMessage("button_stop_recording");
         this.recording = true;
 
         const timeupdate = () => {
@@ -259,10 +269,11 @@ class FragmentSelectionBar {
         };
 
         const pause = () => {
+            this.onchanged();
             this.video.removeEventListener('ended', pause);
             this.video.removeEventListener('pause', pause);
             this.video.removeEventListener('timeupdate', timeupdate);
-            this.helpText.innerText = 'Жми сюда когда начнется реклама';
+            this.helpText.innerText = chrome.i18n.getMessage("button_add_new_fragment");
             this.recording = false;
         };
 
