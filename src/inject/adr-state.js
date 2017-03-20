@@ -3,21 +3,26 @@
 class ADRElements {
 
     constructor() {
-        function findBody() {
-            return document.getElementsByTagName('body')[0];
-        }
+        this.findBody();
+        this.findVideoTag();
+        this.findControlsContainer();
+        this.findRightControls();
+    }
 
-        function findVideoTag() {
-            return document.getElementsByTagName('video')[0];
-        }
+    findBody() {
+        this.body = document.getElementsByTagName('body')[0];
+    }
 
-        function findControlsContainer() {
-            return document.getElementsByClassName('ytp-chrome-bottom')[0];
-        }
+    findVideoTag() {
+        this.video = document.getElementsByTagName('video')[0];
+    }
 
-        this.body = findBody();
-        this.video = findVideoTag();
-        this.controlsContainer = findControlsContainer();
+    findControlsContainer() {
+        this.controlsContainer = document.getElementsByClassName('ytp-chrome-bottom')[0];
+    }
+
+    findRightControls() {
+        this.rightControls = document.getElementsByClassName('ytp-right-controls')[0];
     }
 }
 

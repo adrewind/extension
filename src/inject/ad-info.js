@@ -1,13 +1,17 @@
 
 class ADInfo {
 
+    constructor() {
+        this.storage = chrome.storage.local;
+    }
+
     update(videoID, fragments) {
         const data = {
             fragments,
             updated: +new Date,
             submitted: false,
         };
-        chrome.storage.local.set({
+        this.storage.set({
             [videoID]: data,
         });
     }
@@ -15,7 +19,7 @@ class ADInfo {
     load(videoID) {
         return new Promise(resolve => {
             const onload = data => resolve(data[videoID]);
-            chrome.storage.local.get(videoID, onload);
+            this.storage.get(videoID, onload);
         })
     }
 }

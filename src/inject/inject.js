@@ -1,7 +1,7 @@
 
 function getVideoID() {
     function youtubeUrlParser(url) {
-        const exp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+        const exp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&\?]*).*/;
         const match = url.match(exp);
         return (match && match[7].length === 11) ? match[7] : false;
     }

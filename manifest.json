@@ -15,7 +15,8 @@
     "persistent": true
   },
   "permissions": [
-    "contextMenus"
+    "contextMenus",
+    "storage"
   ],
   "content_scripts": [
     {
@@ -31,6 +32,10 @@
         "https://www.youtube.com/*"
       ],
       "js": [
+        "src/inject/adr-state.js",
+        "src/inject/ad-selectors.js",
+        "src/inject/ad-info.js",
+        "src/inject/controls.js",
         "src/inject/player.js",
         "src/inject/inject.js"
       ]
