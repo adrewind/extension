@@ -13,7 +13,12 @@ class AdditionalControls {
             </svg>`;
 
 
-        this.controls = adrElements.rightControls;
+        const found = adrElements.findRightControls();
+        if (!found) {
+            throw new NoElementError("Right control panel is not found");
+        }
+
+        this.controls = found;
         this.button = this.addPlayerButton('Отметить рекламу', svg);  // TODO: i18n
     }
 

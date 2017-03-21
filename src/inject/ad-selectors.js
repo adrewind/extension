@@ -144,6 +144,7 @@ class FragmentSelection {
 
             const alive = this.element.style.opacity > 0.1;
             if (!alive) {
+                this.onchanged();
                 return this.destroy();
             }
 
@@ -175,7 +176,9 @@ class FragmentSelection {
         const duration = this.video.duration;
         const timelineWidth = this.timeline.clientWidth;
 
-        // TODO: hide if duration is unavialable
+        if (!duration) {
+            setTimeout(() => this.redraw(), 500);
+        }
 
         const start = (this.start / duration) * timelineWidth;
         const end = (this.end / duration) * timelineWidth;
@@ -185,7 +188,6 @@ class FragmentSelection {
     }
 
     destroy() {
-        this.onchanged();
         this.dead = true;
         this.element.remove();
     }
@@ -195,11 +197,22 @@ class FragmentSelection {
 class FragmentSelectionBar {
 
     constructor() {
+        const video = adrElements.findVideoTag();
+        const controls = adrElements.findControlsContainer();
+
+        if (!video) {
+            throw new NoElementError('video tag is not found');
+        }
+        if (!controls) {
+            throw new NoElementError('youtube controls is not found');
+        }
+
+        this.video = video;
+        this.container = controls;
+
         this.fragments = [];
         this.recording = false;
         this.element = this.createElement();
-        this.container = adrElements.controlsContainer;
-        this.video = adrElements.video;
         this.onchanged = () => null;
 
         this.hide();
@@ -239,6 +252,10 @@ class FragmentSelectionBar {
         menu.appendChild(help);
 
         return menu;
+    }
+
+    onChange(callback) {
+        this.onchanged = callback;
     }
 
     addFragment() {
@@ -316,8 +333,7 @@ class FragmentSelectionBar {
         this.fragments = [];
     }
 
-    loadNewFragments(rawFragments) {
-        this.removeAllFragments();
+    loadFragments(rawFragments) {
         rawFragments.forEach(f => {
             const [start, end] = f;
             const fragment = this.addFragment();
@@ -337,5 +353,11 @@ class FragmentSelectionBar {
         const frags = alive.map(({ start, end }) => [start, end]);
 
         return frags.sort((a, b) => a.start - b.start);
+    }
+
+    destroy() {
+        this.removeAllFragments();
+        this.onchanged = () => null;
+        this.element.remove();
     }
 }
