@@ -2,6 +2,11 @@
 class ADJumper {
 
     constructor() {
+        const video = adrElements.findVideoTag();
+        if (!video) {
+            throw new NoElementError('video tag is not found');
+        }
+
         this.skip = [];
         this.active = true;
 
@@ -23,17 +28,13 @@ class ADJumper {
         this.video.currentTime = position;
     }
 
-    skipFragmet(from, to) {
-        this.skip.push([from, to]);
-    }
-
     updateFragments(skip) {
         this.skip = skip;
     }
 
     findFragmentAt(time) {
         // TODO: use more efficient algorithm
-        const found = this.skip.filter(([ start, end ]) => start <= time && time <= end);
+        const found = this.skip.filter(([start, end]) => start <= time && time <= end);
         return found[0] || null;
     }
 
@@ -51,15 +52,11 @@ class ADJumper {
         const current = this.video.currentTime;
 
         // TODO: use more efficient algorithm
-        for (let i = 0; i < this.skip.length; i += 1) {
-            const [start, end] = this.skip[i];
+        const found = this.findFragmentAt(current);
 
-            if (start > current || current > end - reserve) {
-                continue;
-            }
-
+        if (found) {
+            const end = found[1];
             this.seekTo(end);
-            break;
         }
     }
 
@@ -70,7 +67,6 @@ class ADJumper {
         const tracking = [ARROW_LEFT, ARROW_RIGHT];
 
         // TODO: refactor, add J and L keys
-
         this.body.addEventListener('keyup', (e) => {
 
             if (!tracking.includes(e.keyCode)) {
@@ -84,7 +80,7 @@ class ADJumper {
                 return;
             }
 
-            const [ start, end ] = skip;
+            const [start, end] = skip;
 
             if (e.keyCode === ARROW_LEFT) {
                 this.video.currentTime = start - 5;
