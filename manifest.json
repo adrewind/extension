@@ -15,7 +15,6 @@
     "persistent": true
   },
   "permissions": [
-    "contextMenus",
     "storage"
   ],
   "content_scripts": [
@@ -37,6 +36,7 @@
         "src/inject/ad-info.js",
         "src/inject/controls.js",
         "src/inject/player.js",
+        "src/inject/ad-manager.js",
         "src/inject/inject.js"
       ]
     }
