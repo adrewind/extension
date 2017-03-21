@@ -63,4 +63,16 @@
     "message":"You can even set <span class='code'>data-l10n</span> on things like the &lt;title&gt; tag, which lets you have translatable page titles, or fieldset &lt;legend&gt; tags, or anywhere else - the default <span class='code'>Boil.localize()</span> behavior will check every tag in the document, not just the body."
     ,"description":"inform about places which may not be obvious, like <title>, etc"
   }
+
+
+
+
+  ,"button_add_new_fragment": {
+    "message": "Click here when ad appears",
+    "description": "Will be displayed inside clickable area. Click will cause adding new cut fragment."
+  }
+  ,"button_stop_recording": {
+    "message": "Click here to stop recording",
+    "description": "Will be displayed inside clickable area. Click will cause stopping of right playhead."
+  }
 }
