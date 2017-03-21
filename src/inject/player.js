@@ -4,7 +4,10 @@ class ADJumper {
     constructor() {
         this.skip = [];
         this.active = true;
-        this.findVideoTag();
+
+        this.body = adrElements.body;
+        this.video = adrElements.video;
+
         this.handleEvents();
     }
 
@@ -16,12 +19,7 @@ class ADJumper {
         this.active = false;
     }
 
-    findVideoTag() {
-        this.video = document.getElementsByTagName('video')[0];
-    }
-
     seekTo(position) {
-        // console.log('SEEKING to ' + position)
         this.video.currentTime = position;
     }
 
@@ -29,8 +27,19 @@ class ADJumper {
         this.skip.push([from, to]);
     }
 
+    updateFragments(skip) {
+        this.skip = skip;
+    }
+
+    findFragmentAt(time) {
+        // TODO: use more efficient algorithm
+        const found = this.skip.filter(([ start, end ]) => start <= time && time <= end);
+        return found[0] || null;
+    }
+
     handleEvents() {
         this.video.addEventListener('timeupdate', () => this.onTimeUpdate());
+        this.handleBackAndForward();
     }
 
     onTimeUpdate() {
@@ -54,7 +63,36 @@ class ADJumper {
         }
     }
 
-    updateFragments(skip) {
-        this.skip = skip;
+    handleBackAndForward() {
+        const ARROW_LEFT = 37;
+        const ARROW_RIGHT = 39;
+
+        const tracking = [ARROW_LEFT, ARROW_RIGHT];
+
+        // TODO: refactor, add J and L keys
+
+        this.body.addEventListener('keyup', (e) => {
+
+            if (!tracking.includes(e.keyCode)) {
+                return;
+            }
+
+            const time = this.video.currentTime;
+            const skip = this.findFragmentAt(time);
+
+            if (!skip) {
+                return;
+            }
+
+            const [ start, end ] = skip;
+
+            if (e.keyCode === ARROW_LEFT) {
+                this.video.currentTime = start - 5;
+            }
+
+            if (e.keyCode === ARROW_RIGHT) {
+                this.video.currentTime = end;
+            }
+        });
     }
 }
