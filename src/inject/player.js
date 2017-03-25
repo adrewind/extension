@@ -34,7 +34,7 @@ class ADJumper {
 
     findFragmentAt(time) {
         // TODO: use more efficient algorithm
-        const found = this.skip.filter(([start, end]) => start <= time && time <= end);
+        const found = this.skip.filter(([start, end]) => start <= time && time < end);
         return found[0] || null;
     }
 
@@ -48,14 +48,14 @@ class ADJumper {
             return;
         }
 
-        const reserve = 0.25; // seconds
+        const reserve = 0.08; // seconds (~two frames)
         const current = this.video.currentTime;
 
         // TODO: use more efficient algorithm
         const found = this.findFragmentAt(current);
+        const end = found && found[1];
 
-        if (found) {
-            const end = found[1];
+        if (current + reserve < end) {
             this.seekTo(end);
         }
     }
