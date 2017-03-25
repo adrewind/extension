@@ -144,8 +144,9 @@ class FragmentSelection {
 
             const alive = this.element.style.opacity > 0.1;
             if (!alive) {
+                this.destroy();
                 this.onchanged();
-                return this.destroy();
+                return;
             }
 
             this.element.style.top = '0px';

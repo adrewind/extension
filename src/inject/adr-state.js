@@ -50,6 +50,8 @@ class ADRObserver {
             return null;
         }
 
+        callback();
+
         const observer = new MutationObserver(callback);
         const config = {
             attributes: true,

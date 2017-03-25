@@ -11,8 +11,7 @@ class ADManager {
 
         this.handleVideoChange();
         adrObserver.onSRCChanged(() =>
-            adrObserver.onPlaying(() =>
-                this.handleVideoChange()));
+            this.handleVideoChange());
     }
 
     getVideoID() {

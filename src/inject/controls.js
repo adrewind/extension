@@ -22,6 +22,7 @@ class AdditionalControls {
         this.button = this.addPlayerButton('Отметить рекламу', svg);  // TODO: i18n
     }
 
+    // TODO: show ytp-tooltip on mouseover
     addPlayerButton(title, svg) {
         const button = document.createElement('button');
         button.classList.add('ytp-button');
