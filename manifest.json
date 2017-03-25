@@ -35,7 +35,7 @@
         "src/inject/ad-selectors.js",
         "src/inject/ad-info.js",
         "src/inject/controls.js",
-        "src/inject/player.js",
+        "src/inject/ad-jumper.js",
         "src/inject/ad-manager.js",
         "src/inject/inject.js"
       ]
