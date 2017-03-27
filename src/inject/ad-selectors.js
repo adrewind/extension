@@ -70,6 +70,7 @@ class FragmentSelection {
         this.element = this.createElement();
         this.dead = false;
         this.onchanged = () => null;
+        this.onremoved = () => null;
 
         this.leftNeightbor = null;
         this.rightNeightbor = null;
@@ -103,7 +104,6 @@ class FragmentSelection {
         this.redraw();
         this.video.currentTime = position;
     }
-
 
     setEndPercent(percent) {
         const duration = this.video.duration;
@@ -146,6 +146,7 @@ class FragmentSelection {
             if (!alive) {
                 this.destroy();
                 this.onchanged();
+                this.onremoved();
                 return;
             }
 
@@ -171,6 +172,10 @@ class FragmentSelection {
             body.addEventListener('mouseup', mouseup);
             body.addEventListener('mousemove', mousemove);
         });
+    }
+
+    onRemove(callback) {
+        this.onremoved = callback;
     }
 
     redraw() {
@@ -293,6 +298,7 @@ class FragmentSelectionBar {
             this.recording = false;
         };
 
+        fragment.onRemove(pause);
         this.video.addEventListener('ended', pause);
         this.video.addEventListener('pause', pause);
         this.video.addEventListener('timeupdate', timeupdate);
