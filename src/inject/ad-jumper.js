@@ -28,6 +28,10 @@ class ADJumper {
         this.video.currentTime = position;
     }
 
+    reset() {
+        this.skip = [];
+    }
+
     updateFragments(skip) {
         this.skip = skip;
     }

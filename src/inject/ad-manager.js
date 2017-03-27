@@ -15,6 +15,8 @@ class ADManager {
     }
 
     getVideoID() {
+        // TODO: Replace this function with url parsing and getting V parameter
+        // because of urls like this https://www.youtube.com/watch?v=pS0GGcz7wN4&index=21&list=PLJ8cMiYb3G5eNMPb_MTRyLDzm_AOIk7UF
         function youtubeUrlParser(url) {
             const exp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&\?]*).*/;
             const match = url.match(exp);
@@ -25,12 +27,20 @@ class ADManager {
     }
 
     toggleEditor() {
-        const shown = this.selectionBar.toggle();
+        // We do not touch Youtube's pre-roll ads
+        // user can skip it manually or find another extension
+        if (adrElements.adIsShowing()) {
+            this.selectionBar.hide();
+            this.adJumper.disable();
+            return;
+        }
 
-        if (shown) {
+        if (this.selectionBar.isShown()) {
             this.adJumper.enable();
+            this.selectionBar.hide();
         } else {
             this.adJumper.disable();
+            this.selectionBar.show();
         }
     }
 
@@ -53,11 +63,18 @@ class ADManager {
             return;
         }
 
+        this.adJumper.reset();
         this.createSelectionBar();
         this.loadInfo(videoID);
 
         if (!this.controls && !this.createControls()) {
             return;
+        }
+
+        // We do not touch Youtube's pre-roll ads
+        // user can skip it manually or find another extension
+        if (adrElements.adIsShowing()) {
+            this.selectionBar.hide();
         }
     }
 

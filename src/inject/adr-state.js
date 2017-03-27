@@ -6,6 +6,7 @@ class ADRElements {
         this.findVideoTag();
         this.findControlsContainer();
         this.findRightControls();
+        this.findVideoContainer();
     }
 
     findBody() {
@@ -25,6 +26,21 @@ class ADRElements {
     findRightControls() {
         this.rightControls = document.getElementsByClassName('ytp-right-controls')[0] || null;
         return this.rightControls;
+    }
+
+    findVideoContainer() {
+        this.videoContainer = document.getElementsByClassName('html5-video-player')[0] || null;
+        return this.videoContainer;
+    }
+
+    adIsShowing() {
+        const container = this.findVideoContainer();
+
+        if (!container) {
+            return false;
+        }
+
+        return container.classList.contains('ad-showing');
     }
 }
 

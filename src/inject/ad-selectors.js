@@ -231,14 +231,8 @@ class FragmentSelectionBar {
         this.element.style.display = 'none';
     }
 
-    toggle() {
-        const hidden = this.element.style.display === 'none';
-        if (hidden) {
-            this.show();
-        } else {
-            this.hide();
-        }
-        return !hidden;
+    isShown() {
+        return this.element.style.display !== 'none';
     }
 
     createElement() {
