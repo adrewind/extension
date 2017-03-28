@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "manifest_version": 2,
   "description": "This plugin skips video fragments with an advertisement placed by an author.",
-  "homepage_url": "http://extensionizr.com",
+  "homepage_url": "http://adrewind.net",
   "icons": {
     "16": "icons/fullicon16.png",
     "48": "icons/fullicon48.png",
@@ -15,7 +15,9 @@
     "persistent": true
   },
   "permissions": [
-    "storage"
+    "storage",
+    "identity",
+    "http://localhost:9090/"
   ],
   "content_scripts": [
     {
@@ -31,14 +33,19 @@
         "https://www.youtube.com/*"
       ],
       "js": [
+        "src/inject/xhr.js",
         "src/inject/adr-state.js",
         "src/inject/ad-selectors.js",
         "src/inject/ad-info.js",
         "src/inject/controls.js",
         "src/inject/ad-jumper.js",
         "src/inject/ad-manager.js",
-        "src/inject/inject.js"
+        "src/inject/inject.js",
+        "src/inject/guide.js"
       ]
     }
+  ],
+  "web_accessible_resources": [
+    "images/guide-ad-menu-en.svg"
   ]
 }
