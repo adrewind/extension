@@ -52,6 +52,7 @@ class ADJumper {
             return;
         }
 
+        // TODO: do something with late detection of fragment start
         const reserve = 0.08; // seconds (~two frames)
         const current = this.video.currentTime;
 

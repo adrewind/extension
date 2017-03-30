@@ -6,7 +6,7 @@ class ADRElements {
         this.findVideoTag();
         this.findControlsContainer();
         this.findRightControls();
-        this.findVideoContainer();
+        this.findADContainer();
     }
 
     findBody() {
@@ -28,19 +28,45 @@ class ADRElements {
         return this.rightControls;
     }
 
-    findVideoContainer() {
-        this.videoContainer = document.getElementsByClassName('html5-video-player')[0] || null;
+    findADContainer() {
+        this.videoContainer = document.getElementsByClassName('ad-container')[0] || null;
         return this.videoContainer;
     }
 
     adIsShowing() {
-        const container = this.findVideoContainer();
+        // TODO: fix this function, .ad-showing class doesn't removes
+        // after banner above timline is closed
+        const container = this.findADContainer();
 
         if (!container) {
             return false;
         }
 
-        return container.classList.contains('ad-showing');
+        const content = container.children;
+
+        if (!content || !content.length) {
+            return false;
+        }
+
+        // TODO: test this solution
+        return content[0].classList.contains('videoAdUi');
+        // return container.classList.contains('ad-showing');
+    }
+
+    getUserID() {
+        let params;
+        let ghelp;
+        let chanid;
+
+        try {
+            params = window.ytInitialData.responseContext.serviceTrackingParams;
+            ghelp = params.filter(i => i.service === "GUIDED_HELP")[0];
+            chanid = ghelp.params.filter(i => i.key === "creator_channel_id")[0];
+        } catch (e) {
+            return null;
+        }
+
+        return chanid.value || null;
     }
 }
 

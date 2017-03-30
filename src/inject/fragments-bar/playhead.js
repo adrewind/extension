@@ -5,7 +5,6 @@ class Playhead {
         this.side = side;
         this.body = adrElements.body;
         this.container = adrElements.controlsContainer;
-        // this.locked = false;
         this.onchange = callback;
         this.onchanged = () => null;
         this.ondblclick = () => null;

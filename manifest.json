@@ -15,7 +15,9 @@
     "persistent": true
   },
   "permissions": [
-    "storage"
+    "alarms",
+    "storage",
+    "https://*.adrewind.net/"
   ],
   "content_scripts": [
     {
@@ -31,6 +33,8 @@
         "https://www.youtube.com/*"
       ],
       "js": [
+        "src/inject/config.js",
+        "src/inject/xhr.js",
         "src/inject/adr-state.js",
         "src/inject/fragments-bar/playhead.js",
         "src/inject/fragments-bar/frame-by-frame.js",
