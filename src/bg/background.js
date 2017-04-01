@@ -18,6 +18,7 @@ chrome.extension.onConnect.addListener((port) => {
         return;
     }
 
+    // TODO: use XHRRequest
     port.onMessage.addListener((options) => {
         const xhr = new XMLHttpRequest();
 
