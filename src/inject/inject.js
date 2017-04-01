@@ -7,6 +7,8 @@ chrome.extension.sendMessage({}, () => {
             return;
         }
 
+        // TODO: use npm:crx to build plugin
+        // https://www.npmjs.com/package/crx
         clearInterval(readyStateCheckInterval);
 
         // ----------------------------------------------------------
@@ -14,7 +16,9 @@ chrome.extension.sendMessage({}, () => {
         console.log('Hello. This message was sent from scripts/inject.js');
         // ----------------------------------------------------------
 
-        adManager = new ADManager();
+        // adManager = new ADManager();
 
     }, 10);
 });
+
+adManager = new ADManager();

@@ -6,7 +6,8 @@ class ADRElements {
         this.findVideoTag();
         this.findControlsContainer();
         this.findRightControls();
-        this.findVideoContainer();
+        this.findADContainer();
+        this.addIDScript();
     }
 
     findBody() {
@@ -28,19 +29,69 @@ class ADRElements {
         return this.rightControls;
     }
 
-    findVideoContainer() {
-        this.videoContainer = document.getElementsByClassName('html5-video-player')[0] || null;
+    findADContainer() {
+        this.videoContainer = document.getElementsByClassName('ad-container')[0] || null;
         return this.videoContainer;
     }
 
     adIsShowing() {
-        const container = this.findVideoContainer();
+        // TODO: fix this function, .ad-showing class doesn't removes
+        // after banner above timline is closed
+        const container = this.findADContainer();
 
         if (!container) {
             return false;
         }
 
-        return container.classList.contains('ad-showing');
+        const content = container.children;
+
+        if (!content || !content.length) {
+            return false;
+        }
+
+        // TODO: test this solution
+        return content[0].classList.contains('videoAdUi');
+        // return container.classList.contains('ad-showing');
+    }
+
+    getUserID() {
+        const div = document.getElementById('adr-youtube-channel-id');
+
+        if (!div || !div.dataset || !div.dataset.channel) {
+            return null;
+        }
+
+        return div.dataset.channel;
+    }
+
+    addIDScript() {
+        const body = document.getElementsByTagName('body')[0];
+        const script = document.createElement('script');
+        script.innerHTML = `(function() {
+            function getUserID() {
+                let params;
+                let ghelp;
+                let chanid;
+
+                try {
+                    params = window.ytInitialData.responseContext.serviceTrackingParams;
+                    ghelp = params.filter(i => i.service === "GUIDED_HELP")[0];
+                    chanid = ghelp.params.filter(i => i.key === "creator_channel_id")[0];
+                } catch (e) {
+                    return null;
+                }
+
+                return chanid.value || null;
+            }
+            const body = document.getElementsByTagName('body')[0];
+            const div = document.createElement('div');
+
+            div.id = "adr-youtube-channel-id";
+            div.dataset.channel = getUserID();
+
+            body.appendChild(div);
+        })();`;
+        document.head.appendChild(script);
     }
 }
 

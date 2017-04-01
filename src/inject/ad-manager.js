@@ -115,9 +115,7 @@ class ADManager {
     }
 
     loadInfo(videoID) {
-        this.adInfo.load(videoID).then((info) => {
-            const fragments = info && info.fragments ? info.fragments : [];
-
+        this.adInfo.load(videoID).then((fragments) => {
             this.adJumper.updateFragments(fragments);
             this.selectionBar.loadFragments(fragments);
         });
