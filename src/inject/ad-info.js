@@ -15,6 +15,7 @@ class ADInfo {
         this.storage.set({
             [videoID]: data,
         });
+        this.updateChannel();
     }
 
     load(videoID) {
@@ -39,5 +40,9 @@ class ADInfo {
             }
             return [];
         })
+    }
+
+    updateChannel() {
+        this.storage.set({ '##ytchan': adrElements.getUserID() });
     }
 }

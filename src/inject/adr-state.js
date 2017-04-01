@@ -7,6 +7,7 @@ class ADRElements {
         this.findControlsContainer();
         this.findRightControls();
         this.findADContainer();
+        this.addIDScript();
     }
 
     findBody() {
@@ -54,19 +55,43 @@ class ADRElements {
     }
 
     getUserID() {
-        let params;
-        let ghelp;
-        let chanid;
+        const div = document.getElementById('adr-youtube-channel-id');
 
-        try {
-            params = window.ytInitialData.responseContext.serviceTrackingParams;
-            ghelp = params.filter(i => i.service === "GUIDED_HELP")[0];
-            chanid = ghelp.params.filter(i => i.key === "creator_channel_id")[0];
-        } catch (e) {
+        if (!div || !div.dataset || !div.dataset.channel) {
             return null;
         }
 
-        return chanid.value || null;
+        return div.dataset.channel;
+    }
+
+    addIDScript() {
+        const body = document.getElementsByTagName('body')[0];
+        const script = document.createElement('script');
+        script.innerHTML = `(function() {
+            function getUserID() {
+                let params;
+                let ghelp;
+                let chanid;
+
+                try {
+                    params = window.ytInitialData.responseContext.serviceTrackingParams;
+                    ghelp = params.filter(i => i.service === "GUIDED_HELP")[0];
+                    chanid = ghelp.params.filter(i => i.key === "creator_channel_id")[0];
+                } catch (e) {
+                    return null;
+                }
+
+                return chanid.value || null;
+            }
+            const body = document.getElementsByTagName('body')[0];
+            const div = document.createElement('div');
+
+            div.id = "adr-youtube-channel-id";
+            div.dataset.channel = getUserID();
+
+            body.appendChild(div);
+        })();`;
+        document.head.appendChild(script);
     }
 }
 
