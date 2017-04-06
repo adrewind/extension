@@ -54,6 +54,13 @@
     }
   ],
   "web_accessible_resources": [
-    "images/guide-ad-menu-en.svg"
+    "images/guide-hello-en.svg",
+    "images/guide-hello-ru.svg",
+    "images/guide-ad-menu-en.svg",
+    "images/guide-ad-menu-ru.svg",
+    "images/guide-playhead-en.svg",
+    "images/guide-playhead-ru.svg",
+    "images/guide-removal-en.svg",
+    "images/guide-removal-ru.svg"
   ]
 }
