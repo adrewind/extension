@@ -43,6 +43,10 @@ class ADInfo {
     }
 
     updateChannel() {
-        this.storage.set({ '##ytchan': adrElements.getUserID() });
+        const userid = adrElements.getUserID();
+        if (!userid) {
+            return;
+        }
+        this.storage.set({ '##ytchan': userid });
     }
 }

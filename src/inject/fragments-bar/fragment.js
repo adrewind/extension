@@ -144,6 +144,8 @@ class FragmentSelection {
             const position = this.end + frameTime * sign;
             this.setEndTime(position);
         }
+        // TODO: single point of responsibility
+        this.onchanged();
     }
 
     redraw() {
