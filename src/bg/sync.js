@@ -29,14 +29,21 @@ class Sync {
     }
 
     run() {
+        // TODO: Automatic tests for sync
+        // TODO: [^] Improve readability using asyc / await
         this.findUnsynced().then((items) => {
-            return this.findChannelId()
+            let found = null;
+            return this.findUnsynced()
+                .then((found) => {
+                    if (found.length < 1) {
+                        throw new Error('break');
+                    }
+                    return this.findChannelId();
+                })
                 .then(id => this.auth(id))
-                .then(auth => this.findUnsynced())
-                .then(r => this.sendToServer(r))
+                .then(auth => this.sendToServer(found))
                 .catch(e => e instanceof AuthError ? console.log(e) : e);
         });
-
     }
 
     auth(channel) {
