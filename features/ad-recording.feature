@@ -16,9 +16,9 @@ Feature: Ad fragment selection
     Given I am watch "4oqfodY2Lz0" video
     When I click ".adr-mark-ad-button" element
     And I wait "5" seconds
-    Then I should see ".adr-ad-selection" element
+    Then I should see ".adr-ad-sel-menu" element
 
-  Scenario: Hiding disable annotations while selection bar is activated
+  Scenario: Disable annotations while selection bar is activated
     Given I am watch "2vMH8lITTCE" video
     When I enable annotations
     And I click ".adr-mark-ad-button" element

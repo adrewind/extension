@@ -16,6 +16,7 @@ class FragmentSelectionBar {
         this.container = controls;
         this.annotations = new Annotations();
 
+        this.keepInterval = null;
         this.fragments = [];
         this.recording = false;
         this.element = this.createElement();
@@ -29,13 +30,28 @@ class FragmentSelectionBar {
     }
 
     show() {
+        this.keepShown();
         this.element.style.display = '';
         this.annotations.hide();
     }
 
     hide() {
+        this.canBeHidden();
         this.element.style.display = 'none';
         this.annotations.show();
+    }
+
+    // Prevents hiding controls by Player due to inactivity
+    keepShown() {
+        this.keepInterval = setInterval(() => {
+            const event = createMouseEvent();
+            this.element.dispatchEvent(event);
+        }, 500)
+    }
+
+    canBeHidden() {
+        clearInterval(this.keepInterval);
+        this.keepInterval = null;
     }
 
     isShown() {
@@ -164,4 +180,27 @@ class FragmentSelectionBar {
         this.onchanged = () => null;
         this.element.remove();
     }
+}
+
+function createMouseEvent(type = 'mousemove') {
+    const screenX = 50;
+    const screenY = 50;
+    const clientY = 50;
+    const clientX = 50 + Math.random() * 10;
+    const [ctrlKey, altKey, shiftKey, metaKey] = [false, false, false, false];
+
+    const mouseMoveEvent = document.createEvent('MouseEvents');
+    mouseMoveEvent.initMouseEvent(
+       type,
+       true, // canBubble
+       false, // cancelable
+       window, // event's AbstractView : should be window
+       1, // detail : Event's mouse click count
+       screenX, screenY,
+       clientX, clientY,
+       ctrlKey, altKey, shiftKey, metaKey,
+       0, // button : 0 = click, 1 = middle button, 2 = right button
+       null // relatedTarget : Only used with some event types (e.g. mouseover and mouseout). In other cases, pass null.
+    );
+    return mouseMoveEvent;
 }
