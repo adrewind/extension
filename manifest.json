@@ -43,6 +43,7 @@
         "src/inject/fragments-bar/playhead.js",
         "src/inject/fragments-bar/frame-by-frame.js",
         "src/inject/fragments-bar/fragment.js",
+        "src/inject/fragments-bar/annotations.js",
         "src/inject/fragments-bar/bar.js",
         "src/inject/ad-info.js",
         "src/inject/controls.js",

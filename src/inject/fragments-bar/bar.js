@@ -14,6 +14,7 @@ class FragmentSelectionBar {
 
         this.video = video;
         this.container = controls;
+        this.annotations = new Annotations();
 
         this.fragments = [];
         this.recording = false;
@@ -29,10 +30,12 @@ class FragmentSelectionBar {
 
     show() {
         this.element.style.display = '';
+        this.annotations.hide();
     }
 
     hide() {
         this.element.style.display = 'none';
+        this.annotations.show();
     }
 
     isShown() {
@@ -124,8 +127,13 @@ class FragmentSelectionBar {
         });
     }
 
+    // TODO: merge following two functions
     handlePlayerResize() {
         adrObserver.onPlayerResize(() => this.redrawAllFragments());
+    }
+
+    redrawAllFragments() {
+        this.fragments.forEach(fragment => fragment.redraw());
     }
 
     removeAllFragments() {
@@ -142,10 +150,6 @@ class FragmentSelectionBar {
             fragment.setEndPosition(end);
             fragment.redraw();
         });
-    }
-
-    redrawAllFragments() {
-        this.fragments.forEach(fragment => fragment.redraw());
     }
 
     exportFragments() {
