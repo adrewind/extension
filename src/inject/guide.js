@@ -145,11 +145,11 @@ class ADRGuide {
     }
 
     showButtonPulse() {
-        this.adButton.classList.add('pulse');
+        this.adButton.classList.add('adr-pulse');
 
         const nopulse = () => {
             this.adButton.classList.remove('pulse');
-            this.adButton.removeEventListener('click', nopulse);
+            this.adButton.removeEventListener('adr-click', nopulse);
 
             this.highlightBar(); // TODO: Find better place for it
         }
@@ -208,8 +208,14 @@ class ADRGuide {
 
 
 adrObserver.waitForVideo().then(() => {
+    const hash = window.location.hash;
+
+    if (hash.match(/adr-no-guide/ig)) {
+        return;
+    }
+
     const guide = new ADRGuide();
-    window.guide = guide;
+
     // guide.showHint('guide-hello', 'en');
     // guide.stickTo(adButton);
 
