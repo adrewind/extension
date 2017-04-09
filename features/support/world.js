@@ -9,7 +9,8 @@ function CustomWorld() {
   this.driver = ((new seleniumWebdriver.Builder())
     .forBrowser('chrome')
     .setChromeOptions(new chrome.Options()
-      .addExtensions('build/latest.zip'))
+      .addExtensions('build/latest.zip')
+      .addArguments('--mute-audio'))
     .build());
 }
 
