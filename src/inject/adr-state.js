@@ -34,6 +34,16 @@ class ADRElements {
         return this.videoContainer;
     }
 
+    findAnnotationsToggle() {
+        const gear = document.getElementsByClassName('ytp-settings-button')[0];
+        if (!gear) {
+            return null;
+        }
+        gear.click();
+        gear.click();
+        return document.querySelector('[role="menuitemcheckbox"]:nth-child(2)');
+    }
+
     adIsShowing() {
         // TODO: fix this function, .ad-showing class doesn't removes
         // after banner above timline is closed
