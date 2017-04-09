@@ -2,16 +2,14 @@ const { until } = require('selenium-webdriver');
 const { WAIT_LOCATED, WAIT_DISPLAY } = require('../support/constants');
 
 
-function shouldSeeElement(driver, query) {
-  const locating = until.elementLocated(query);
+async function shouldSeeElement(driver, query) {
+  const condition = until.elementLocated(query);
+  await driver.wait(condition, WAIT_LOCATED);
 
-  return driver
-    .wait(locating, WAIT_LOCATED)
-    .then(() => driver.findElement(query))
-    .then(el => driver.wait(until.elementIsVisible(el), WAIT_DISPLAY))
-    // .then(el => el.isDisplayed())
-    // .then(displayed => expect(displayed).to.be.true)
-    ;
+  const element = await driver.findElement(query);
+  const condition2 = until.elementIsVisible(element);
+
+  await driver.wait(condition2, WAIT_DISPLAY);
 }
 
 module.exports = { shouldSeeElement };

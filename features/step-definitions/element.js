@@ -1,7 +1,5 @@
 const { defineSupportCode } = require('cucumber');
-const { until } = require('selenium-webdriver');
 const { shouldSeeElement } = require('./common');
-// const { expect } = require('chai');
 
 
 defineSupportCode((functions) => {
