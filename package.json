@@ -1,0 +1,20 @@
+{
+  "name": "adrewind",
+  "version": "1.0.0",
+  "description": "This plugin skips video fragments with an advertisement placed by the author.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "adm-zip": "^0.4.7",
+    "chromedriver": "^2.28.0",
+    "cucumber": "^2.0.0-rc.9",
+    "selenium-webdriver": "^3.3.0"
+  }
+}
