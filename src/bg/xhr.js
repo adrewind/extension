@@ -19,7 +19,7 @@ function XHRRequest(method, url, data = '') {
                 data: data,
                 status: xhr.status,
             });
-        }
+        };
 
         xhr.send(json);
     });

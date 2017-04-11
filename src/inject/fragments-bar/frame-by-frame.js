@@ -48,7 +48,7 @@ class FrameByFrameControls {
         const click = (e, direction) => {
             pass(e);
             this.onstep(direction);
-        }
+        };
 
         this.element.addEventListener('click', pass);
         this.element.addEventListener('mousedown', pass);

@@ -2,8 +2,8 @@
 
 
 Promise.sequentially = (iterable) => {
-    return iterable.reduce((p, fn) => p.then(fn), Promise.resolve())
-}
+    return iterable.reduce((p, fn) => p.then(fn), Promise.resolve());
+};
 
 
 class Sync {
@@ -50,10 +50,10 @@ class Sync {
         const data = channel ? { channel } : { anonymous: true };
         return XHRRequest('POST', this.urlAuth, data)
             .then(({ status, data }) => {
-                if(status !== 200) {
+                if (status !== 200) {
                     throw new AuthError('status != 200');
                 }
-                if(!data.authenticated) {
+                if (!data.authenticated) {
                     throw new AuthError('not authenticated');
                 }
                 return true;
@@ -97,7 +97,7 @@ class Sync {
             }
             this.storage.set({
                 [videoID]: Object.assign({}, info, {submitted: true})
-            })
+            });
         });
     }
 

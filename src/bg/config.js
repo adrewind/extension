@@ -5,4 +5,4 @@ const API_ENDPOINT_REPORTS = 'https://tk.adrewind.net';
 
 
 const SYNC_ALARM_PERIOD = 15; // minutes
-const SYNC_MATURITY_TRESHOLD = 30 // minutes. Items untouched 30 minutes and more will be synced
+const SYNC_MATURITY_TRESHOLD = 30; // minutes. Items untouched 30 minutes and more will be synced

@@ -1,4 +1,5 @@
 
+// TODO: Use async / await
 class ADInfo {
 
     constructor() {
@@ -34,12 +35,11 @@ class ADInfo {
         return proxyXHR(`${this.endpoint}/video/${videoID}/`).then(({data, status}) => {
             if (status === 200) {
                 return data;
-            } else {
-                // TODO: send it to sentry
-                console.log(status);
             }
+            // TODO: send it to sentry
+            console.log(status);
             return [];
-        })
+        });
     }
 
     updateChannel() {

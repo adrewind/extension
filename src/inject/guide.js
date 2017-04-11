@@ -14,7 +14,7 @@ class ADRGuideViewer {
             'guide-ad-menu': { height: 141, width: 219, shiftBottom: -70, shiftRight: 11 },
             'guide-playhead': { height: 179, width: 463, shiftBottom: 25.5, shiftRight: -45},
             'guide-removal': { height: 303, width: 387, shiftBottom: -250, shiftRight: 45},
-        }
+        };
     }
 
     show() {
@@ -152,8 +152,8 @@ class ADRGuide {
             this.adButton.removeEventListener('adr-click', nopulse);
 
             this.highlightBar(); // TODO: Find better place for it
-        }
-        this.adButton.addEventListener('click', nopulse)
+        };
+        this.adButton.addEventListener('click', nopulse);
     }
 
     highlightBar() {
@@ -178,7 +178,7 @@ class ADRGuide {
             this.video.pause();
 
             this.viewer.element.addEventListener('click', showSecond);
-        }
+        };
 
         const showSecond = () => {
             const playhead = document.getElementsByClassName('adr-playhead-right')[0];
@@ -213,7 +213,7 @@ async function showGuide() {
         return;
     }
 
-    await adrObserver.waitForVideo()
+    await adrObserver.waitForVideo();
     const guide = new ADRGuide();
 
     // guide.showHint('guide-hello', 'en');

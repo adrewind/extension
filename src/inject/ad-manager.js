@@ -90,9 +90,8 @@ class ADManager {
         } catch (e) {
             if (e instanceof NoElementError) {
                 return false;
-            } else {
-                throw e;
             }
+            throw e;
         }
         return true;
     }
@@ -103,9 +102,8 @@ class ADManager {
         } catch (e) {
             if (e instanceof NoElementError) {
                 return false;
-            } else {
-                throw e;
             }
+            throw e;
         }
         return true;
     }

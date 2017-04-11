@@ -46,7 +46,7 @@ class FragmentSelectionBar {
         this.keepInterval = setInterval(() => {
             const event = createMouseEvent();
             this.element.dispatchEvent(event);
-        }, 500)
+        }, 500);
     }
 
     canBeHidden() {
