@@ -6,7 +6,7 @@
 
 
 chrome.extension.onConnect.addListener((port) => {
-    if (port.name != 'XHRProxy_') {
+    if (port.name !== 'XHRProxy_') {
         return;
     }
 

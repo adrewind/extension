@@ -32,7 +32,7 @@ class ADInfo {
     }
 
     loadFragments(videoID) {
-        return proxyXHR(`${this.endpoint}/video/${videoID}/`).then(({data, status}) => {
+        return proxyXHR(`${this.endpoint}/video/${videoID}/`).then(({ data, status }) => {
             if (status === 200) {
                 return data;
             }

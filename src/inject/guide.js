@@ -12,8 +12,8 @@ class ADRGuideViewer {
         this.images = {
             'guide-hello': { squeezeBottom: 16 },
             'guide-ad-menu': { height: 141, width: 219, shiftBottom: -70, shiftRight: 11 },
-            'guide-playhead': { height: 179, width: 463, shiftBottom: 25.5, shiftRight: -45},
-            'guide-removal': { height: 303, width: 387, shiftBottom: -250, shiftRight: 45},
+            'guide-playhead': { height: 179, width: 463, shiftBottom: 25.5, shiftRight: -45 },
+            'guide-removal': { height: 303, width: 387, shiftBottom: -250, shiftRight: 45 },
         };
     }
 
@@ -163,7 +163,7 @@ class ADRGuide {
         setTimeout(() => this.helpText.classList.remove('inactive'), 60);
         setTimeout(() => this.helpText.classList.add('inactive'), 2500);
 
-        this.storage.set({'###guide': 1});
+        this.storage.set({ '###guide': 1 });
     }
 
     showPlayheadHelp() {

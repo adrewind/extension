@@ -96,7 +96,7 @@ class Sync {
                 return;
             }
             this.storage.set({
-                [videoID]: Object.assign({}, info, {submitted: true})
+                [videoID]: Object.assign({}, info, { submitted: true }),
             });
         });
     }
