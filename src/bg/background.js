@@ -1,15 +1,8 @@
-// if you checked "fancy-settings" in extensionizr.com, uncomment this lines
+// if you checked 'fancy-settings' in extensionizr.com, uncomment this lines
 
-// var settings = new Store("settings", {
-//     "sample_setting": "This is how you use Store.js to remember values"
+// var settings = new Store('settings', {
+//     'sample_setting': 'This is how you use Store.js to remember values'
 // });
-
-
-//example of using a message handler from the inject scripts
-chrome.extension.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    sendResponse();
-  });
 
 
 chrome.extension.onConnect.addListener((port) => {
@@ -22,7 +15,7 @@ chrome.extension.onConnect.addListener((port) => {
         const xhr = new XMLHttpRequest();
 
         const { url } = options;
-        const method = options.method || "GET";
+        const method = options.method || 'GET';
 
         xhr.open(method, url, true);
 

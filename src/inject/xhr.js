@@ -13,7 +13,7 @@ const proxyXHR = (url, params = {}) => new Promise((resolve) => {
         try {
             data = JSON.parse(msg.responseText);
         } catch(e) {
-            data = { error: "Error while parsing response" };
+            data = { error: 'Error while parsing response' };
         }
 
         resolve({

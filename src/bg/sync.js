@@ -83,7 +83,7 @@ class Sync {
     }
 
     sendToServer(items) {
-        console.log("SENDING TO SERVER");
+        console.log('SENDING TO SERVER');
         const sendInfo = (i) => this.sendInfo(i);
 
         return Promise.sequentially(items.map(sendInfo));

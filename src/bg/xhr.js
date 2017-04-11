@@ -5,7 +5,7 @@ function XHRRequest(method, url, data = '') {
         const json = data === '' ? '' : JSON.stringify(data);
 
         xhr.open(method, url, true);
-        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader('Content-Type', 'application/json');
 
         xhr.onloadend = () => {
             let data;

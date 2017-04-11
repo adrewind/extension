@@ -64,7 +64,7 @@ class FragmentSelectionBar {
 
         const help = document.createElement('div');
         help.classList.add('adr-ad-help-text');
-        help.innerText = chrome.i18n.getMessage("button_add_new_fragment");
+        help.innerText = chrome.i18n.getMessage('button_add_new_fragment');
         this.helpText = help;
 
         menu.appendChild(help);
@@ -99,7 +99,7 @@ class FragmentSelectionBar {
 
         this.video.play();
         fragment.redraw();
-        this.helpText.innerText = chrome.i18n.getMessage("button_stop_recording");
+        this.helpText.innerText = chrome.i18n.getMessage('button_stop_recording');
         this.recording = true;
 
         const timeupdate = () => {
@@ -112,7 +112,7 @@ class FragmentSelectionBar {
             this.video.removeEventListener('ended', pause);
             this.video.removeEventListener('pause', pause);
             this.video.removeEventListener('timeupdate', timeupdate);
-            this.helpText.innerText = chrome.i18n.getMessage("button_add_new_fragment");
+            this.helpText.innerText = chrome.i18n.getMessage('button_add_new_fragment');
             this.recording = false;
         };
 

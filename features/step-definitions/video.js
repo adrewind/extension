@@ -48,10 +48,10 @@ defineSupportCode((functions) => {
 
   when('I click on first suggested video', async function _when() {
     // We use two selectors to cover old and new version
-    const query = { 'css': '.yt-lockup .yt-thumb,.ytd-thumbnail' };
+    const query = { 'css': '.yt-lockup .yt-thumb,ytd-grid-video-renderer .ytd-thumbnail' };
     const condition = until.elementLocated(query);
     const thumbnail = await this.driver.wait(condition, WAIT_LOCATED);
 
-    thumbnail.click();
+    await thumbnail.click();
   });
 });

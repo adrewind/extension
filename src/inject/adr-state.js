@@ -96,7 +96,7 @@ class ADRElements {
             const body = document.getElementsByTagName('body')[0];
             const div = document.createElement('div');
 
-            div.id = "adr-youtube-channel-id";
+            div.id = 'adr-youtube-channel-id';
             div.dataset.channel = getUserID();
 
             body.appendChild(div);
@@ -150,8 +150,6 @@ class ADRObserver {
     }
 
     waitForVideo() {
-        const CHECK_FREQ = 2000; // ms
-
         return new Promise((resolve) => {
             const wait = setInterval(() => {
                 const found = adrElements.findVideoTag();
@@ -159,7 +157,7 @@ class ADRObserver {
 
                 resolve();
                 clearInterval(wait);
-            }, CHECK_FREQ);
+            }, VIDEO_CHECK_FREQ);
         });
     }
 }

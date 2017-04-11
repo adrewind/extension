@@ -15,7 +15,7 @@ class AdditionalControls {
 
         const found = adrElements.findRightControls();
         if (!found) {
-            throw new NoElementError("Right control panel is not found");
+            throw new NoElementError('Right control panel is not found');
         }
 
         this.controls = found;
