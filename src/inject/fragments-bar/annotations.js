@@ -7,16 +7,19 @@ class Annotations {
     }
 
     isShown() {
+        if (!this.toggle) { return null; }
         return this.toggle.getAttribute('aria-checked') === 'true';
     }
 
     show() {
+        if (!this.toggle) { return null; }
         if (!this.isShown() && !this.ignore) {
             this.toggle.click();
         }
     }
 
     hide() {
+        if (!this.toggle) { return null; }
         if (this.isShown()) {
             this.toggle.click();
             this.ignore = false;

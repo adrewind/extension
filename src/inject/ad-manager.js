@@ -9,7 +9,12 @@ class ADManager {
 
         this.adInfo = new ADInfo();
 
+        this.init();
+    }
+
+    async init() {
         this.handleVideoChange();
+        await adrObserver.waitForVideo();
         adrObserver.onSRCChanged(() =>
             this.handleVideoChange());
     }

@@ -122,11 +122,6 @@ class ADRObserver {
     }
 
     onSRCChanged(callback) {
-        if (!adrElements.video) {
-            this.waitForVideo().then(() => this.onSRCChanged(callback));
-            return null;
-        }
-
         callback();
 
         const observer = new MutationObserver(callback);

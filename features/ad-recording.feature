@@ -6,6 +6,7 @@ Feature: Ad fragment selection
 
   Scenario: Recording ad fragment
     Given I am watch "mKzLoZFz8PE" video
+    And I skip In-Stream ad if it needed
     When I click ".adr-mark-ad-button" element
     And I click ".adr-ad-help-text" element
     And I wait "5" seconds
@@ -14,12 +15,16 @@ Feature: Ad fragment selection
 
   Scenario: Keeping selection bar opened while it activated
     Given I am watch "4oqfodY2Lz0" video
+    And I skip In-Stream ad if it needed
     When I click ".adr-mark-ad-button" element
+    # TODO: following v
+    # And I move mouse out of player
     And I wait "5" seconds
     Then I should see ".adr-ad-sel-menu" element
 
   Scenario: Disable annotations while selection bar is activated
     Given I am watch "2vMH8lITTCE" video
+    And I skip In-Stream ad if it needed
     When I enable annotations
     And I click ".adr-mark-ad-button" element
     Then Annotations must be disabled
@@ -29,6 +34,7 @@ Feature: Ad fragment selection
 
   Scenario: Preserve annotations state
     Given I am watch "2vMH8lITTCE" video
+    And I skip In-Stream ad if it needed
     When I disable annotations
     And I click ".adr-mark-ad-button" element
     Then Annotations must be disabled

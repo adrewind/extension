@@ -30,13 +30,13 @@ class FragmentSelectionBar {
     }
 
     show() {
-        this.keepShown();
+        // this.keepShown();
         this.element.style.display = '';
         this.annotations.hide();
     }
 
     hide() {
-        this.canBeHidden();
+        // this.canBeHidden();
         this.element.style.display = 'none';
         this.annotations.show();
     }

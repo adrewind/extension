@@ -206,18 +206,18 @@ class ADRGuide {
 // TODO: also this selector must be more specific
 // document.getElementsByClassName('close-button')[0].click()
 
-
-adrObserver.waitForVideo().then(() => {
+async function showGuide() {
     const hash = window.location.hash;
 
     if (hash.match(/adr-no-guide/ig)) {
         return;
     }
 
+    await adrObserver.waitForVideo()
     const guide = new ADRGuide();
 
     // guide.showHint('guide-hello', 'en');
     // guide.stickTo(adButton);
 
     // guide.showScreen('guide-hello', 'ru');
-});
+}
