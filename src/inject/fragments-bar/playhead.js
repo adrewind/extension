@@ -20,7 +20,7 @@ class Playhead {
         const element = document.createElement('div');
         element.classList.add(`adr-playhead-${this.side}`);
 
-        element.addEventListener('dblclick', (e) => this.ondblclick(e));
+        element.addEventListener('dblclick', e => this.ondblclick(e));
 
         return element;
     }

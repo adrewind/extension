@@ -158,7 +158,7 @@ class FragmentSelectionBar {
     }
 
     loadFragments(rawFragments) {
-        rawFragments.forEach(f => {
+        rawFragments.forEach((f) => {
             const [start, end] = f;
             const fragment = this.addFragment();
 
@@ -186,7 +186,7 @@ function createMouseEvent(type = 'mousemove') {
     const screenX = 50;
     const screenY = 50;
     const clientY = 50;
-    const clientX = 50 + Math.random() * 10;
+    const clientX = 50 + (Math.random() * 10);
     const [ctrlKey, altKey, shiftKey, metaKey] = [false, false, false, false];
 
     const mouseMoveEvent = document.createEvent('MouseEvents');

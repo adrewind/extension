@@ -53,11 +53,11 @@ class FrameByFrameControls {
         this.element.addEventListener('click', pass);
         this.element.addEventListener('mousedown', pass);
 
-        this.elBack.addEventListener('click', (e) => click(e, 'back'));
+        this.elBack.addEventListener('click', e => click(e, 'back'));
         this.elBack.addEventListener('mousedown', pass);
         this.elBack.addEventListener('dblclick', pass);
 
-        this.elForward.addEventListener('click', (e) => click(e, 'forth'));
+        this.elForward.addEventListener('click', e => click(e, 'forth'));
         this.elForward.addEventListener('mousedown', pass);
         this.elForward.addEventListener('dblclick', pass);
     }

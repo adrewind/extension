@@ -89,8 +89,8 @@ class ADRGuideViewer {
             y: container.bottom - (this.height / 2),
         };
 
-        const bottom = container.bottom - imageCenter.y + this.shiftBottom;
-        const right = container.right - imageCenter.x + this.shiftRight;
+        const bottom = (container.bottom - imageCenter.y) + this.shiftBottom;
+        const right = (container.right - imageCenter.x) + this.shiftRight;
 
         this.image.style.bottom = `${bottom}px`;
         this.image.style.right = `${right}px`;
@@ -109,7 +109,7 @@ class ADRGuide {
         this.viewer.hide();
         this.findElements();
 
-        this.storage.get('###guide', found => {
+        this.storage.get('###guide', (found) => {
             if ('###guide' in found) {
                 return;
             }

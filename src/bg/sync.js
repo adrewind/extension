@@ -61,7 +61,7 @@ class Sync {
     }
 
     findChannelId() {
-        return new Promise((resolve) =>
+        return new Promise(resolve =>
             this.storage.get('##ytchan', data =>
                 resolve(data['##ytchan'] || null )));
     }
@@ -84,7 +84,7 @@ class Sync {
 
     sendToServer(items) {
         console.log('SENDING TO SERVER');
-        const sendInfo = (i) => this.sendInfo(i);
+        const sendInfo = i => this.sendInfo(i);
 
         return Promise.sequentially(items.map(sendInfo));
     }

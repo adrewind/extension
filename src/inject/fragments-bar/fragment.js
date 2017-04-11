@@ -35,8 +35,8 @@ class FragmentSelection {
         this.leftFrameByFrame = new FrameByFrameControls(this.leftPlayhead.element);
         this.rightFrameByFrame = new FrameByFrameControls(this.rightPlayhead.element);
 
-        this.leftFrameByFrame.onstep = (direction) => this.onStep('left', direction);
-        this.rightFrameByFrame.onstep = (direction) => this.onStep('right', direction);
+        this.leftFrameByFrame.onstep = direction => this.onStep('left', direction);
+        this.rightFrameByFrame.onstep = direction => this.onStep('right', direction);
 
         selection.appendChild(background);
         selection.appendChild(this.leftPlayhead.element);
@@ -138,10 +138,10 @@ class FragmentSelection {
         const sign = direction === 'back' ? -1 : 1;
 
         if (playhead === 'left') {
-            const position = this.start + frameTime * sign;
+            const position = this.start + (frameTime * sign);
             this.setStartTime(position);
         } else {
-            const position = this.end + frameTime * sign;
+            const position = this.end + (frameTime * sign);
             this.setEndTime(position);
         }
         // TODO: single point of responsibility
