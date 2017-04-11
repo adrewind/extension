@@ -167,7 +167,6 @@ class ADRGuide {
     }
 
     showPlayheadHelp() {
-
         const showFirst = () => {
             const playhead = document.getElementsByClassName('adr-playhead-right')[0];
             if (!playhead) {

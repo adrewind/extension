@@ -8,15 +8,15 @@ function XHRRequest(method, url, data = '') {
         xhr.setRequestHeader('Content-Type', 'application/json');
 
         xhr.onloadend = () => {
-            let data;
+            let params;
             try {
-                data = JSON.parse(xhr.response);
+                params = JSON.parse(xhr.response);
             } catch (e) {
-                data = new Error('incorrect data');
+                params = new Error('incorrect data');
             }
 
             resolve({
-                data: data,
+                data: params,
                 status: xhr.status,
             });
         };

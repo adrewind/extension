@@ -1,9 +1,8 @@
 // TODO: check if there is not enough storage, delete old synced items
 
-
-Promise.sequentially = (iterable) => {
-    return iterable.reduce((p, fn) => p.then(fn), Promise.resolve());
-};
+Promise.sequentially = iterable =>
+    iterable.reduce((p, fn) =>
+        p.then(fn), Promise.resolve());
 
 
 class Sync {
@@ -31,24 +30,23 @@ class Sync {
     run() {
         // TODO: Automatic tests for sync
         // TODO: [^] Improve readability using asyc / await
-        this.findUnsynced().then((items) => {
-            let found = null;
-            return this.findUnsynced()
+        this.findUnsynced().then(items =>
+            this.findUnsynced()
                 .then((found) => {
                     if (found.length < 1) {
                         throw new Error('break');
                     }
-                    return this.findChannelId();
+                    return this.findChannelId()
+                        .then(id => this.auth(id))
+                        .then(auth => this.sendToServer(found))
+                        .catch(e => e instanceof AuthError ? console.log(e) : e);
                 })
-                .then(id => this.auth(id))
-                .then(auth => this.sendToServer(found))
-                .catch(e => e instanceof AuthError ? console.log(e) : e);
-        });
+        );
     }
 
     auth(channel) {
-        const data = channel ? { channel } : { anonymous: true };
-        return XHRRequest('POST', this.urlAuth, data)
+        const params = channel ? { channel } : { anonymous: true };
+        return XHRRequest('POST', this.urlAuth, params)
             .then(({ status, data }) => {
                 if (status !== 200) {
                     throw new AuthError('status != 200');
@@ -69,17 +67,15 @@ class Sync {
     sendInfo([videoID, info]) {
         const url = `${this.urlReport}${videoID}/`;
 
-        return new Promise((resolve) => {
-
-            return XHRRequest('PUT', url, info.fragments)
+        return new Promise(resolve =>
+            XHRRequest('PUT', url, info.fragments)
                 .then(({ status, data }) => {
                     if (status === 200 && data && data.updated) {
                         this.markAsSubmitted(videoID, info);
                     }
                     return null;
-                });
-
-        });
+                })
+        );
     }
 
     sendToServer(items) {

@@ -73,7 +73,6 @@ class ADJumper {
 
         // TODO: refactor, add J and L keys
         this.body.addEventListener('keyup', (e) => {
-
             if (!tracking.includes(e.keyCode)) {
                 return;
             }
