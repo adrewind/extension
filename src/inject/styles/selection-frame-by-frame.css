@@ -1,0 +1,36 @@
+
+.adr-ad-sel-menu .adr-frame-by-frame {
+    height: 56px;
+    width: 86px;
+    top: -57px;
+    left: -36px;
+    cursor: default;
+    position: absolute;
+}
+
+.adr-ad-sel-menu .adr-frame-by-frame-left,
+.adr-ad-sel-menu .adr-frame-by-frame-right {
+    width: 38px;
+    height: 23px;
+    cursor: pointer;
+    position: absolute;
+    top: 25px;
+    /* top: -35px; */
+
+    color: rgba(255, 255, 255, 0.81);
+    text-align: center;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 21px;
+
+    border-radius: 2px;
+    background-color: rgba(28,28,28,0.9);
+}
+
+.adr-ad-sel-menu .adr-frame-by-frame-left {
+    left: 4px;
+}
+
+.adr-ad-sel-menu .adr-frame-by-frame-right {
+    right: 4px;
+}

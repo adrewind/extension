@@ -2,9 +2,9 @@
 const fs = require('fs');
 const path = require('path');
 const archiver = require('archiver');
-const webpack = require('webpack');
-const gutil = require('gutil');
-const webpackConfig = require('./webpack');
+const config = require('./config');
+const postcssBuild = require('./postcss');
+const webpackBuild = require('./webpack');
 
 
 class ExtensionBuilder {
@@ -15,7 +15,8 @@ class ExtensionBuilder {
         this.srcpath = srcpath;
         this.archive = archiver('zip');
 
-        this.blacklist = /^(build|features|node_modules|src|tests|build\.js|config\.js|package\.json|postcss\.js)$/g;
+        this.dirBlackList = /^(build|features|node_modules|src|tests)$/g;
+        this.fileBlackList = /^(build\.js|config\.js|package\.json|postcss\.js|webpack\.js)$/g;
     }
 
     build() {
@@ -50,53 +51,21 @@ class ExtensionBuilder {
     discoverResources() {
         return fs.readdirSync(this.srcpath)
                  .filter(localpath => !localpath.startsWith('.'))
-                 .filter(localpath => !localpath.match(this.blacklist));
-    }
-
-}
-
-
-class WebpackBuilder {
-
-    constructor() {
-        this.log = text => gutil.log('[webpack:build]', text);
-        this.error = err => new gutil.PluginError('webpack:build', err);
-    }
-
-    build() {
-        return new Promise(resolve =>
-            webpack(webpackConfig, (err, stats) => {
-                if (err) {
-                    throw this.error(err);
-                }
-                this.printStats(stats);
-                return resolve();
-            })
-        );
-    }
-
-    static formatStats(stats) {
-        return stats.toString({
-            chunks: false, // Makes the build much quieter
-            colors: true,
-        });
-    }
-
-    printStats(stats) {
-        const formatted = WebpackBuilder.formatStats(stats);
-        return this.log(formatted);
+                 .filter(localpath => !localpath.match(this.dirBlackList))
+                 .filter(localpath => !localpath.match(this.fileBlackList));
     }
 
 }
 
 
 (async function build() {
-    const wpack = new WebpackBuilder();
-    await wpack.build();
+    await webpackBuild();
+    await postcssBuild();
+    fs.writeFileSync(config.bundle.bgHTML, fs.readFileSync(config.entry.bgHTML));
 
     // TODO: Read version from manifest
     const builder = new ExtensionBuilder('build', 'extension-0.0.3.zip');
     // const builder = new ExtensionBuilder('build/extension.zip');
-    builder.addResource('icons');
+    // builder.addResource('icons');
     builder.build();
 }());
