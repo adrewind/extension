@@ -1,5 +1,7 @@
+import { adrElements } from '../adr-state';
 
-class Annotations {
+
+export default class Annotations {
 
     constructor() {
         this.ignore = false;

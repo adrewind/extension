@@ -1,5 +1,9 @@
+import Playhead from './playhead';
+import FrameByFrameControls from './frame-by-frame';
+import { adrElements } from '../adr-state';
 
-class FragmentSelection {
+
+export default class FragmentSelection {
 
     constructor() {
         this.start = 0;

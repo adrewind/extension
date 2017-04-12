@@ -1,3 +1,5 @@
+import { adrElements, adrObserver } from './adr-state';
+
 
 class ADRGuideViewer {
 
@@ -98,11 +100,11 @@ class ADRGuideViewer {
 }
 
 
-class ADRGuide {
+export default class ADRGuide {
 
     constructor() {
         this.storage = chrome.storage.local;
-        this.locale = this.getLocale();
+        this.locale = ADRGuide.getLocale();
         this.video = adrElements.findVideoTag();
         this.viewer = new ADRGuideViewer();
 
@@ -118,7 +120,7 @@ class ADRGuide {
         // this.showPlayheadHelp();
     }
 
-    getLocale() {
+    static getLocale() {
         const accepted = ['ru', 'en'];
         const actual = navigator.language;
 

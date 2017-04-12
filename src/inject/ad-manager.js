@@ -1,5 +1,11 @@
+import ADInfo from './ad-info';
+import ADJumper from './ad-jumper';
+import AdditionalControls from './controls';
+import FragmentSelectionBar from './fragments-bar/bar';
+import { adrElements, adrObserver, NoElementError } from './adr-state';
 
-class ADManager {
+
+export default class ADManager {
 
     constructor() {
         this.videoID = null;

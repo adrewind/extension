@@ -1,3 +1,5 @@
+import xhrRequest from './xhr';
+import { API_ENDPOINT_REPORTS, SYNC_MATURITY_TRESHOLD, SYNC_ALARM_PERIOD } from './config';
 // TODO: check if there is not enough storage, delete old synced items
 
 Promise.sequentially = iterable =>
@@ -5,12 +7,15 @@ Promise.sequentially = iterable =>
         p.then(fn), Promise.resolve());
 
 
+class AuthError extends Error { }
+
+
 class Sync {
 
     constructor() {
         this.storage = chrome.storage.local;
-        this.urlAuth = API_ENDPOINT_REPORTS + '/auth/';
-        this.urlReport = API_ENDPOINT_REPORTS + '/ad-report/';
+        this.urlAuth = `${API_ENDPOINT_REPORTS}/auth/`;
+        this.urlReport = `${API_ENDPOINT_REPORTS}/ad-report/`;
     }
 
     findUnsynced() {
@@ -30,23 +35,21 @@ class Sync {
     run() {
         // TODO: Automatic tests for sync
         // TODO: [^] Improve readability using asyc / await
-        this.findUnsynced().then(items =>
-            this.findUnsynced()
-                .then((found) => {
-                    if (found.length < 1) {
-                        throw new Error('break');
-                    }
-                    return this.findChannelId()
-                        .then(id => this.auth(id))
-                        .then(auth => this.sendToServer(found))
-                        .catch(e => e instanceof AuthError ? console.log(e) : e);
-                })
-        );
+        this.findUnsynced()
+            .then((found) => {
+                if (found.length < 1) {
+                    return null;
+                }
+                return this.findChannelId()
+                    .then(id => this.auth(id))
+                    .then(auth => this.sendToServer(found))
+                    .catch(e => e instanceof AuthError ? console.log(e) : e);
+            });
     }
 
     auth(channel) {
         const params = channel ? { channel } : { anonymous: true };
-        return XHRRequest('POST', this.urlAuth, params)
+        return xhrRequest('POST', this.urlAuth, params)
             .then(({ status, data }) => {
                 if (status !== 200) {
                     throw new AuthError('status != 200');
@@ -68,7 +71,7 @@ class Sync {
         const url = `${this.urlReport}${videoID}/`;
 
         return new Promise(resolve =>
-            XHRRequest('PUT', url, info.fragments)
+            xhrRequest('PUT', url, info.fragments)
                 .then(({ status, data }) => {
                     if (status === 200 && data && data.updated) {
                         this.markAsSubmitted(videoID, info);
@@ -98,8 +101,6 @@ class Sync {
     }
 
 }
-
-class AuthError extends Error { }
 
 
 chrome.alarms.create('sync', { periodInMinutes: SYNC_ALARM_PERIOD });

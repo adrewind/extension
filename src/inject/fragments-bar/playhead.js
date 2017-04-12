@@ -1,5 +1,7 @@
+import { adrElements } from '../adr-state';
 
-class Playhead {
+
+export default class Playhead {
 
     constructor(side, callback) {
         this.side = side;

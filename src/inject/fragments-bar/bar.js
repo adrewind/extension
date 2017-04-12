@@ -1,5 +1,9 @@
+import Annotations from './annotations';
+import FragmentSelection from './fragment';
+import { adrElements, adrObserver, NoElementError } from '../adr-state';
 
-class FragmentSelectionBar {
+
+export default class FragmentSelectionBar {
 
     constructor() {
         const video = adrElements.findVideoTag();

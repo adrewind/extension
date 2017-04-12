@@ -1,5 +1,7 @@
+import { adrElements, NoElementError } from './adr-state';
 
-class ADJumper {
+
+export default class ADJumper {
 
     constructor() {
         const video = adrElements.findVideoTag();

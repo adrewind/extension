@@ -1,6 +1,10 @@
+import proxyXHR from './xhr';
+import { API_ENDPOINT_VIDEOS } from './config';
+import { adrElements } from './adr-state';
+
 
 // TODO: Use async / await
-class ADInfo {
+export default class ADInfo {
 
     constructor() {
         this.endpoint = API_ENDPOINT_VIDEOS;

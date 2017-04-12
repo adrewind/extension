@@ -1,5 +1,7 @@
+import { adrElements, NoElementError } from './adr-state';
 
-class AdditionalControls {
+
+export default class AdditionalControls {
 
     constructor() {
         const svg = `

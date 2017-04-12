@@ -1,3 +1,5 @@
+import { VIDEO_CHECK_FREQ } from './config';
+
 
 class ADRElements {
 
@@ -104,6 +106,7 @@ class ADRElements {
         document.head.appendChild(script);
     }
 }
+export const adrElements = new ADRElements();
 
 
 class ADRObserver {
@@ -161,9 +164,7 @@ class ADRObserver {
         });
     }
 }
+export const adrObserver = new ADRObserver();
 
-class NoElementError extends Error {}
 
-
-const adrElements = new ADRElements();
-const adrObserver = new ADRObserver();
+export class NoElementError extends Error {}

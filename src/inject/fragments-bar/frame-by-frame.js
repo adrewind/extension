@@ -1,5 +1,7 @@
+import { adrElements } from '../adr-state';
 
-class FrameByFrameControls {
+
+export default class FrameByFrameControls {
 
     constructor(playheadEl) {
         this.createElements();
