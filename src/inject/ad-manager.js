@@ -26,15 +26,13 @@ export default class ADManager {
     }
 
     getVideoID() {
-        // TODO: Replace this function with url parsing and getting V parameter
-        // because of urls like this https://www.youtube.com/watch?v=pS0GGcz7wN4&index=21&list=PLJ8cMiYb3G5eNMPb_MTRyLDzm_AOIk7UF
-        function youtubeUrlParser(url) {
-            const exp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&\?]*).*/;
-            const match = url.match(exp);
-            return (match && match[7].length === 11) ? match[7] : null;
+        function youtubeIDParser(address) {
+            const url = new URL(address);
+            return url.searchParams.get('v');
         }
 
-        return youtubeUrlParser(document.URL);
+        // TODO: use [data-sessionlink="feature=player-title"][href] to cover inline player
+        return youtubeIDParser(document.URL);
     }
 
     toggleEditor() {
