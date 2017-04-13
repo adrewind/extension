@@ -1,6 +1,6 @@
 const { defineSupportCode } = require('cucumber');
 const { until } = require('selenium-webdriver');
-const { WAIT_LOCATED, YT_SKIP_WAIT } = require('../support/constants');
+const { WAIT_LOCATED, WAIT_VIDEO_LOAD, YT_SKIP_WAIT } = require('../support/constants');
 
 
 defineSupportCode((functions) => {
@@ -16,7 +16,7 @@ defineSupportCode((functions) => {
   when('I pause the video', async function _when() {
     const query = { 'css': '.html5-main-video' };
     const condition = until.elementLocated(query);
-    const element = await this.driver.wait(condition, WAIT_LOCATED);
+    const element = await this.driver.wait(condition, WAIT_VIDEO_LOAD);
 
     await this.driver.executeScript("arguments[0].pause()", element);
   });

@@ -6,7 +6,7 @@ Feature: Entry points
 
   Scenario: Main page as entry point
     Given I on the "https://www.youtube.com/" page
-    And I click on first suggested video
+    When I click on first suggested video
     And I pause the video
     Then I should see ".adr-mark-ad-button" element
 
@@ -16,4 +16,13 @@ Feature: Entry points
     # TODO: replace it with human readable name
     Then I should see ".adr-mark-ad-button" element
 
+  Scenario: Playlist as an entry point
+    Given I on the "https://www.youtube.com/results?q=best+coub&sp=CAMSAhAD" page
+    When I click on first suggested video
+    And I pause the video
+    Then I should see ".adr-mark-ad-button" element
 
+  Scenario: Youtube channel as an entry point
+    Given I on the "PewDiePie" channel
+    When I pause the video
+    Then I should see ".adr-mark-ad-button" element
