@@ -14,14 +14,14 @@ export default class Annotations {
     }
 
     show() {
-        if (!this.toggle) { return null; }
+        if (!this.toggle) { return; }
         if (!this.isShown() && !this.ignore) {
             this.toggle.click();
         }
     }
 
     hide() {
-        if (!this.toggle) { return null; }
+        if (!this.toggle) { return; }
         if (this.isShown()) {
             this.toggle.click();
             this.ignore = false;

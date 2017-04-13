@@ -15,6 +15,7 @@ class ExtensionBuilder {
         this.srcpath = srcpath;
         this.archive = archiver('zip');
 
+        // TODO: use whitelist instead
         this.dirBlackList = /^(build|features|node_modules|src|tests)$/g;
         this.fileBlackList = /^(build\.js|config\.js|package\.json|postcss\.js|webpack\.js)$/g;
     }

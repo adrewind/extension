@@ -1,6 +1,7 @@
 import { VIDEO_CHECK_FREQ } from './config';
 
 
+// FIXME: decompose this module, it is too messy
 class ADRElements {
 
     constructor() {
@@ -66,6 +67,16 @@ class ADRElements {
         // return container.classList.contains('ad-showing');
     }
 
+    getVideoURL() {
+        const link = this.getVideoLink();
+        const href = link && link.href;
+        return href || document.URL;
+    }
+
+    getVideoLink() {
+        return document.querySelector('[data-sessionlink="feature=player-title"][href]');
+    }
+
     getUserID() {
         const div = document.getElementById('adr-youtube-channel-id');
 
@@ -77,7 +88,6 @@ class ADRElements {
     }
 
     addIDScript() {
-        const body = document.getElementsByTagName('body')[0];
         const script = document.createElement('script');
         script.innerHTML = `(function() {
             function getUserID() {

@@ -31,8 +31,8 @@ export default class ADManager {
             return url.searchParams.get('v');
         }
 
-        // TODO: use [data-sessionlink="feature=player-title"][href] to cover inline player
-        return youtubeIDParser(document.URL);
+        const videoUrl = adrElements.getVideoURL();
+        return youtubeIDParser(videoUrl);
     }
 
     toggleEditor() {
