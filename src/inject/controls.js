@@ -20,6 +20,9 @@ export default class AdditionalControls {
             throw new NoElementError('Right control panel is not found');
         }
 
+        window.adr = adrElements;
+        console.log(found);
+
         this.controls = found;
         this.button = this.addPlayerButton('Отметить рекламу', svg);  // TODO: i18n
     }

@@ -3,4 +3,5 @@ module.exports = {
   WAIT_DISPLAY: 2000, // ms
   YT_SKIP_WAIT: 5000,
   WAIT_VIDEO_LOAD: 5000,
+  WAIT_FOR_PLUGIN: 5000,
 };

@@ -1,6 +1,7 @@
 import ADInfo from './ad-info';
 import ADJumper from './ad-jumper';
 import AdditionalControls from './controls';
+import Player from './yt-api/player';
 import FragmentSelectionBar from './fragments-bar/bar';
 import { adrElements, adrObserver, NoElementError } from './adr-state';
 
@@ -8,31 +9,24 @@ import { adrElements, adrObserver, NoElementError } from './adr-state';
 export default class ADManager {
 
     constructor() {
+        this.paleyr = null;
         this.videoID = null;
         this.controls = null;
         this.adJumper = null;
         this.selectionBar = null;
 
+        this.player = new Player();
         this.adInfo = new ADInfo();
 
         this.init();
     }
 
     async init() {
+        await this.player.init();
+
         this.handleVideoChange();
-        await adrObserver.waitForVideo();
-        adrObserver.onSRCChanged(() =>
+        this.player.events.srcChanged(() =>
             this.handleVideoChange());
-    }
-
-    getVideoID() {
-        function youtubeIDParser(address) {
-            const url = new URL(address);
-            return url.searchParams.get('v');
-        }
-
-        const videoUrl = adrElements.getVideoURL();
-        return youtubeIDParser(videoUrl);
     }
 
     toggleEditor() {
@@ -60,7 +54,7 @@ export default class ADManager {
     }
 
     handleVideoChange() {
-        const videoID = this.getVideoID();
+        const videoID = this.player.getVideoID();
 
         if (this.videoID === videoID) {
             return;
