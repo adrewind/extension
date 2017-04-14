@@ -2,3 +2,4 @@
 build/
 bundle/
 node_modules/
+debug.log
