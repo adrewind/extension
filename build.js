@@ -15,9 +15,7 @@ class ExtensionBuilder {
         this.srcpath = srcpath;
         this.archive = archiver('zip');
 
-        // TODO: use whitelist instead
-        this.dirBlackList = /^(build|features|node_modules|src|tests)$/g;
-        this.fileBlackList = /^(build\.js|config\.js|package\.json|postcss\.js|webpack\.js)$/g;
+        this.whiteList = /^(_locales|bundle|icons|images|manifest\.json)$/g;
     }
 
     build() {
@@ -52,8 +50,7 @@ class ExtensionBuilder {
     discoverResources() {
         return fs.readdirSync(this.srcpath)
                  .filter(localpath => !localpath.startsWith('.'))
-                 .filter(localpath => !localpath.match(this.dirBlackList))
-                 .filter(localpath => !localpath.match(this.fileBlackList));
+                 .filter(localpath => localpath.match(this.whiteList))
     }
 
 }
