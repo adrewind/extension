@@ -6,5 +6,6 @@ Feature: Icon in right panel of Youtube player
 
   Scenario: Trying to open
     Given I am watch "mKzLoZFz8PE" video
-    When I click ".adr-mark-ad-button" element
+    And I skip In-Stream ad if it needed
+    When I click AD button
     Then I should see ".adr-ad-sel-menu" element

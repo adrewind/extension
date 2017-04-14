@@ -12,6 +12,7 @@ async function shouldSeeElement(driver, query,
   const condition2 = until.elementIsVisible(element);
 
   await driver.wait(condition2, waitDisplay);
+  return element;
 }
 
 module.exports = { shouldSeeElement };
