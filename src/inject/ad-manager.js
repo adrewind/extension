@@ -1,9 +1,10 @@
 import ADInfo from './ad-info';
 import ADJumper from './ad-jumper';
+import showGuide from './guide';
 import AdditionalControls from './controls';
 import Player from './yt-api/player';
 import FragmentSelectionBar from './fragments-bar/bar';
-import { adrElements, adrObserver, NoElementError } from './adr-state';
+import { NoElementError } from './common';
 
 
 export default class ADManager {
@@ -16,7 +17,7 @@ export default class ADManager {
         this.selectionBar = null;
 
         this.player = new Player();
-        this.adInfo = new ADInfo();
+        this.adInfo = new ADInfo(this.player);
 
         this.init();
     }
@@ -32,7 +33,7 @@ export default class ADManager {
     toggleEditor() {
         // We do not touch Youtube's pre-roll ads
         // user can skip it manually or find another extension
-        if (adrElements.adIsShowing()) {
+        if (this.player.ads.isShowing()) {
             this.selectionBar.hide();
             this.adJumper.disable();
             return;
@@ -76,15 +77,16 @@ export default class ADManager {
 
         // We do not touch Youtube's pre-roll ads
         // user can skip it manually or find another extension
-        if (adrElements.adIsShowing()) {
+        if (this.player.ads.isShowing()) {
             this.selectionBar.hide();
         }
     }
 
     createControls() {
         try {
-            this.controls = new AdditionalControls();
+            this.controls = new AdditionalControls(this.player);
             this.controls.button.addEventListener('click', () => this.toggleEditor());
+            showGuide(this.player);
         } catch (e) {
             if (e instanceof NoElementError) {
                 return false;
@@ -96,7 +98,7 @@ export default class ADManager {
 
     createADJumper() {
         try {
-            this.adJumper = new ADJumper();
+            this.adJumper = new ADJumper(this.player.video);
         } catch (e) {
             if (e instanceof NoElementError) {
                 return false;
@@ -111,7 +113,7 @@ export default class ADManager {
             this.selectionBar.destroy();
         }
 
-        this.selectionBar = new FragmentSelectionBar();
+        this.selectionBar = new FragmentSelectionBar(this.player);
         this.selectionBar.onChange(() => this.handleEdits());
     }
 

@@ -1,12 +1,12 @@
-import { adrElements } from '../adr-state';
+import { body } from '../common';
 
 
 export default class Playhead {
 
-    constructor(side, callback) {
+    constructor(side, player, callback) {
         this.side = side;
-        this.body = adrElements.body;
-        this.container = adrElements.controlsContainer;
+        this.body = body;
+        this.container = player.controlsContainer;
         this.onchange = callback;
         this.onchanged = () => null;
         this.ondblclick = () => null;

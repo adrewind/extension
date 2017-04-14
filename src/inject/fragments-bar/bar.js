@@ -1,24 +1,22 @@
-import Annotations from './annotations';
 import FragmentSelection from './fragment';
-import { adrElements, adrObserver, NoElementError } from '../adr-state';
+import { NoElementError } from '../common';
 
 
 export default class FragmentSelectionBar {
 
-    constructor() {
-        const video = adrElements.findVideoTag();
-        const controls = adrElements.findControlsContainer();
-
-        if (!video) {
+    constructor(player) {
+        if (!player.video) {
             throw new NoElementError('video tag is not found');
         }
-        if (!controls) {
+        if (!player.controlsContainer) {
             throw new NoElementError('youtube controls is not found');
         }
 
-        this.video = video;
-        this.container = controls;
-        this.annotations = new Annotations();
+        this.player = player;
+        this.video = player.video;
+        this.container = player.controlsContainer;
+        this.annotations = player.annotations;
+        this.annotations.findToggle();
 
         this.keepInterval = null;
         this.fragments = [];
@@ -81,7 +79,7 @@ export default class FragmentSelectionBar {
     }
 
     addFragment() {
-        const sel = new FragmentSelection();
+        const sel = new FragmentSelection(this.player);
         this.fragments.push(sel);
         this.element.appendChild(sel.element);
 
@@ -149,7 +147,7 @@ export default class FragmentSelectionBar {
 
     // TODO: merge following two functions
     handlePlayerResize() {
-        adrObserver.onPlayerResize(() => this.redrawAllFragments());
+        this.player.events.playerResize(() => this.redrawAllFragments());
     }
 
     redrawAllFragments() {

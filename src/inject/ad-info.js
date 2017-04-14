@@ -1,13 +1,12 @@
 import proxyXHR from './xhr';
 import { API_ENDPOINT_VIDEOS } from './config';
-import { adrElements } from './adr-state';
 
 
 // TODO: Use async / await
 export default class ADInfo {
 
-    constructor() {
-        this.endpoint = API_ENDPOINT_VIDEOS;
+    constructor(player) {
+        this.user = player.user;
         this.storage = chrome.storage.local;
     }
 
@@ -36,7 +35,7 @@ export default class ADInfo {
     }
 
     loadFragments(videoID) {
-        return proxyXHR(`${this.endpoint}/video/${videoID}/`).then(({ data, status }) => {
+        return proxyXHR(`${API_ENDPOINT_VIDEOS}/video/${videoID}/`).then(({ data, status }) => {
             if (status === 200) {
                 return data;
             }
@@ -47,7 +46,7 @@ export default class ADInfo {
     }
 
     updateChannel() {
-        const userid = adrElements.getUserID();
+        const userid = this.user.getID();
         if (!userid) {
             return;
         }

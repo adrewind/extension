@@ -1,11 +1,22 @@
-import { adrElements } from '../adr-state';
 
-
-export default class Annotations {
+export default class PlayerAnnotations {
 
     constructor() {
         this.ignore = false;
-        this.toggle = adrElements.findAnnotationsToggle();
+        this.toggle = null;
+    }
+
+    /*
+     * Caution. Do not use it while ads is showing, because youtube shows different controls.
+     */
+    findToggle() {
+        const gear = document.getElementsByClassName('ytp-settings-button')[0];
+        if (!gear) {
+            return null;
+        }
+        gear.click();
+        gear.click();
+        this.toggle = document.querySelector('[role="menuitemcheckbox"]:nth-child(2)');
     }
 
     isShown() {

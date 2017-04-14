@@ -1,10 +1,9 @@
-import { adrElements, NoElementError } from './adr-state';
+import { body, NoElementError } from './common';
 
 
 export default class ADJumper {
 
-    constructor() {
-        const video = adrElements.findVideoTag();
+    constructor(video) {
         if (!video) {
             throw new NoElementError('video tag is not found');
         }
@@ -12,8 +11,8 @@ export default class ADJumper {
         this.skip = [];
         this.active = true;
 
-        this.body = adrElements.body;
-        this.video = adrElements.video;
+        this.body = body;
+        this.video = video;
 
         this.handleEvents();
     }

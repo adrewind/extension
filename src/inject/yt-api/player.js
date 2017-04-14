@@ -1,4 +1,7 @@
+import User from './user';
+import PlayerAds from './player-ads';
 import PlayerEvents from './player-events';
+import PlayerAnnotations from './player-annotations';
 import { untilLocated } from './helpers';
 
 
@@ -15,7 +18,13 @@ export default class Player {
         this.video = await Player.untilVideoAppears();
         this.vidlink = await Player.untilVideoLinkAppears();
 
+        this.user = new User();
+        this.ads = new PlayerAds();
         this.events = new PlayerEvents(this.video);
+        this.annotations = new PlayerAnnotations();
+
+        this.rightControls = Player.findRightControls();
+        this.controlsContainer = Player.findControlsContainer();
     }
 
     static findVideoTag() {
@@ -26,12 +35,20 @@ export default class Player {
         return untilLocated(Player.findVideoTag);
     }
 
-    static getVideoLink() {
+    static findVideoLink() {
         return document.querySelector('[data-sessionlink="feature=player-title"][href]');
     }
 
     static untilVideoLinkAppears() {
-        return untilLocated(Player.getVideoLink);
+        return untilLocated(Player.findVideoLink);
+    }
+
+    static findControlsContainer() {
+        return document.getElementsByClassName('ytp-chrome-bottom')[0] || null;
+    }
+
+    static findRightControls() {
+        return document.getElementsByClassName('ytp-right-controls')[0] || null;
     }
 
     getVideoID() {
