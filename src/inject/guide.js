@@ -1,4 +1,5 @@
 
+// TODO: Write tests for it
 class ADRGuideViewer {
 
     constructor() {
@@ -100,10 +101,10 @@ class ADRGuideViewer {
 
 class ADRGuide {
 
-    constructor() {
+    constructor(player) {
         this.storage = chrome.storage.local;
-        this.locale = this.getLocale();
-        this.video = adrElements.findVideoTag();
+        this.locale = ADRGuide.getLocale();
+        this.video = player.video;
         this.viewer = new ADRGuideViewer();
 
         this.viewer.hide();
@@ -118,7 +119,7 @@ class ADRGuide {
         // this.showPlayheadHelp();
     }
 
-    getLocale() {
+    static getLocale() {
         const accepted = ['ru', 'en'];
         const actual = navigator.language;
 
@@ -157,6 +158,7 @@ class ADRGuide {
     }
 
     highlightBar() {
+        // FIXME: why it doesn't work?
         this.helpText.classList.add('highlight');
         this.helpText.classList.add('inactive');
 
@@ -205,15 +207,14 @@ class ADRGuide {
 // TODO: also this selector must be more specific
 // document.getElementsByClassName('close-button')[0].click()
 
-async function showGuide() {
+export default async function showGuide(player) {
     const hash = window.location.hash;
 
     if (hash.match(/adr-no-guide/ig)) {
         return;
     }
 
-    await adrObserver.waitForVideo();
-    const guide = new ADRGuide();
+    const guide = new ADRGuide(player);
 
     // guide.showHint('guide-hello', 'en');
     // guide.stickTo(adButton);

@@ -1,5 +1,5 @@
 
-const proxyXHR = (url, params = {}) => new Promise((resolve) => {
+export default (url, params = {}) => new Promise((resolve) => {
     const port = chrome.extension.connect({ name: 'XHRProxy_' });
 
     const settings = {

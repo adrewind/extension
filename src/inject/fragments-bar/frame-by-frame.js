@@ -1,9 +1,9 @@
 
-class FrameByFrameControls {
+export default class FrameByFrameControls {
 
-    constructor(playheadEl) {
+    constructor(video, playheadEl) {
         this.createElements();
-        this.video = adrElements.findVideoTag();
+        this.video = video;
         this.onstep = () => null;
 
         playheadEl.appendChild(this.element);

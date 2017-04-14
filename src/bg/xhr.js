@@ -1,5 +1,5 @@
 
-function XHRRequest(method, url, data = '') {
+export default function xhrRequest(method, url, data = '') {
     return new Promise((resolve) => {
         const xhr = new XMLHttpRequest();
         const json = data === '' ? '' : JSON.stringify(data);

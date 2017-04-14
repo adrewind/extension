@@ -10,6 +10,7 @@ defineSupportCode((functions) => {
 
   async function getAnnotationsToggle(driver) {
     const gear = { css: '.ytp-settings-button' };
+    // FIXME: it isn't work if ads is showing
     const toggle = { css: '[role="menuitemcheckbox"]:nth-child(2)' };
 
     const gearEl = await driver.findElement(gear);

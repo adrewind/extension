@@ -2,6 +2,9 @@
 const fs = require('fs');
 const path = require('path');
 const archiver = require('archiver');
+const config = require('./config');
+const postcssBuild = require('./postcss');
+const webpackBuild = require('./webpack');
 
 
 class ExtensionBuilder {
@@ -12,22 +15,22 @@ class ExtensionBuilder {
         this.srcpath = srcpath;
         this.archive = archiver('zip');
 
-        this.blacklist = /^(node_modules|build|features|tests|package\.json|build\.js)$/g;
+        this.whiteList = /^(_locales|bundle|icons|images|manifest\.json)$/g;
     }
 
     build() {
         const resources = this.discoverResources();
-        resources.forEach((r) => this.addResource(r));
+        resources.forEach(r => this.addResource(r));
 
         this.setOutput();
         this.archive.finalize();
     }
 
     setOutput() {
-        const latest = fs.createWriteStream(path.join(this.outdir, "latest.zip"));
+        const latest = fs.createWriteStream(path.join(this.outdir, 'latest.zip'));
         const output = fs.createWriteStream(path.join(this.outdir, this.outfile));
 
-        this.archive.on('error', function(err) {
+        this.archive.on('error', (err) => {
             throw err;
         });
 
@@ -35,26 +38,32 @@ class ExtensionBuilder {
         this.archive.pipe(latest);
     }
 
-    addResource(path) {
-        const isFile = fs.lstatSync(path).isFile();
+    addResource(resource) {
+        const isFile = fs.lstatSync(resource).isFile();
         if (isFile) {
-            this.archive.file(path);
+            this.archive.file(resource);
         } else {
-            this.archive.directory(path);
+            this.archive.directory(resource);
         }
     }
 
     discoverResources() {
         return fs.readdirSync(this.srcpath)
-                 .filter(path => !path.startsWith('.'))
-                 .filter(path => !path.match(this.blacklist));
+                 .filter(localpath => !localpath.startsWith('.'))
+                 .filter(localpath => localpath.match(this.whiteList))
     }
 
 }
 
 
-// TODO: Read version from manifest
-const builder = new ExtensionBuilder('build', 'extension-0.0.3.zip');
-// const builder = new ExtensionBuilder('build/extension.zip');
-builder.addResource('icons');
-builder.build();
+(async function build() {
+    await webpackBuild();
+    await postcssBuild();
+    fs.writeFileSync(config.bundle.bgHTML, fs.readFileSync(config.entry.bgHTML));
+
+    // TODO: Read version from manifest
+    const builder = new ExtensionBuilder('build', 'extension-0.0.3.zip');
+    // const builder = new ExtensionBuilder('build/extension.zip');
+    // builder.addResource('icons');
+    builder.build();
+}());

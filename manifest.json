@@ -4,6 +4,7 @@
   "manifest_version": 2,
   "description": "This plugin skips video fragments with an advertisement placed by the author.",
   "homepage_url": "http://adrewind.net",
+  "run_at": "document_start",
   "icons": {
     "16": "icons/no-ad-icon-16.png",
     "32": "icons/no-ad-icon-32.png",
@@ -15,7 +16,7 @@
   },
   "default_locale": "en",
   "background": {
-    "page": "src/bg/background.html",
+    "page": "bundle/background.html",
     "persistent": true
   },
   "permissions": [
@@ -29,7 +30,7 @@
         "https://www.youtube.com/*"
       ],
       "css": [
-        "src/inject/inject.css"
+        "bundle/inject.css"
       ]
     },
     {
@@ -37,20 +38,7 @@
         "https://www.youtube.com/*"
       ],
       "js": [
-        "src/inject/config.js",
-        "src/inject/xhr.js",
-        "src/inject/adr-state.js",
-        "src/inject/fragments-bar/playhead.js",
-        "src/inject/fragments-bar/frame-by-frame.js",
-        "src/inject/fragments-bar/fragment.js",
-        "src/inject/fragments-bar/annotations.js",
-        "src/inject/fragments-bar/bar.js",
-        "src/inject/ad-info.js",
-        "src/inject/controls.js",
-        "src/inject/ad-jumper.js",
-        "src/inject/ad-manager.js",
-        "src/inject/inject.js",
-        "src/inject/guide.js"
+        "bundle/inject.js"
       ]
     }
   ],

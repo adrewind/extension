@@ -1,40 +1,39 @@
+import ADInfo from './ad-info';
+import ADJumper from './ad-jumper';
+import showGuide from './guide';
+import AdditionalControls from './controls';
+import Player from './yt-api/player';
+import FragmentSelectionBar from './fragments-bar/bar';
+import { NoElementError } from './common';
 
-class ADManager {
+
+export default class ADManager {
 
     constructor() {
+        this.paleyr = null;
         this.videoID = null;
         this.controls = null;
         this.adJumper = null;
         this.selectionBar = null;
 
-        this.adInfo = new ADInfo();
+        this.player = new Player();
+        this.adInfo = new ADInfo(this.player);
 
         this.init();
     }
 
     async init() {
+        await this.player.init();
+
         this.handleVideoChange();
-        await adrObserver.waitForVideo();
-        adrObserver.onSRCChanged(() =>
+        this.player.events.srcChanged(() =>
             this.handleVideoChange());
-    }
-
-    getVideoID() {
-        // TODO: Replace this function with url parsing and getting V parameter
-        // because of urls like this https://www.youtube.com/watch?v=pS0GGcz7wN4&index=21&list=PLJ8cMiYb3G5eNMPb_MTRyLDzm_AOIk7UF
-        function youtubeUrlParser(url) {
-            const exp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&\?]*).*/;
-            const match = url.match(exp);
-            return (match && match[7].length === 11) ? match[7] : null;
-        }
-
-        return youtubeUrlParser(document.URL);
     }
 
     toggleEditor() {
         // We do not touch Youtube's pre-roll ads
         // user can skip it manually or find another extension
-        if (adrElements.adIsShowing()) {
+        if (this.player.ads.isShowing()) {
             this.selectionBar.hide();
             this.adJumper.disable();
             return;
@@ -56,7 +55,7 @@ class ADManager {
     }
 
     handleVideoChange() {
-        const videoID = this.getVideoID();
+        const videoID = this.player.getVideoID();
 
         if (this.videoID === videoID) {
             return;
@@ -78,15 +77,16 @@ class ADManager {
 
         // We do not touch Youtube's pre-roll ads
         // user can skip it manually or find another extension
-        if (adrElements.adIsShowing()) {
+        if (this.player.ads.isShowing()) {
             this.selectionBar.hide();
         }
     }
 
     createControls() {
         try {
-            this.controls = new AdditionalControls();
+            this.controls = new AdditionalControls(this.player);
             this.controls.button.addEventListener('click', () => this.toggleEditor());
+            showGuide(this.player);
         } catch (e) {
             if (e instanceof NoElementError) {
                 return false;
@@ -98,7 +98,7 @@ class ADManager {
 
     createADJumper() {
         try {
-            this.adJumper = new ADJumper();
+            this.adJumper = new ADJumper(this.player.video);
         } catch (e) {
             if (e instanceof NoElementError) {
                 return false;
@@ -113,7 +113,7 @@ class ADManager {
             this.selectionBar.destroy();
         }
 
-        this.selectionBar = new FragmentSelectionBar();
+        this.selectionBar = new FragmentSelectionBar(this.player);
         this.selectionBar.onChange(() => this.handleEdits());
     }
 

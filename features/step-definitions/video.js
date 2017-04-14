@@ -1,6 +1,8 @@
-const { defineSupportCode } = require('cucumber');
 const { until } = require('selenium-webdriver');
-const { WAIT_LOCATED, YT_SKIP_WAIT } = require('../support/constants');
+const { defineSupportCode } = require('cucumber');
+const { shouldSeeElement } = require('./common');
+const { WAIT_LOCATED, WAIT_VIDEO_LOAD,
+        YT_UNSKIPABLE_WAIT, YT_SKIP_WAIT } = require('../support/constants');
 
 
 defineSupportCode((functions) => {
@@ -16,13 +18,13 @@ defineSupportCode((functions) => {
   when('I pause the video', async function _when() {
     const query = { 'css': '.html5-main-video' };
     const condition = until.elementLocated(query);
-    const element = await this.driver.wait(condition, WAIT_LOCATED);
+    const element = await this.driver.wait(condition, WAIT_VIDEO_LOAD);
 
     await this.driver.executeScript("arguments[0].pause()", element);
   });
 
   given('I skip In-Stream ad if it needed', async function _given() {
-    const query = { 'css': '.ad-container' };
+    const query = { 'css': '.ad-container > .videoAdUi' };
     const condition = until.elementLocated(query);
     let container;
 
@@ -32,18 +34,15 @@ defineSupportCode((functions) => {
       return;
     }
 
-    const classList = await container.getAttribute('class');
-    const adIsShowing = classList.includes('videoAdUi');
-
-    if (!adIsShowing) {
-      return;
-    }
-
     const querySkip = { 'css': '.videoAdUiSkipButton' };
-    const conditionSkip = until.elementLocated(querySkip);
-    const skipButton = await this.driver.wait(conditionSkip, YT_SKIP_WAIT);
-
-    await skipButton.click();
+    try {
+      const skipButton = await shouldSeeElement(this.driver, querySkip,
+                                                YT_SKIP_WAIT, YT_SKIP_WAIT);
+      await skipButton.click();
+    } catch (e) {
+      const queryNoskipAd = until.stalenessOf(container);
+      await this.driver.wait(queryNoskipAd, YT_UNSKIPABLE_WAIT);
+    }
   });
 
   when('I click on first suggested video', async function _when() {
