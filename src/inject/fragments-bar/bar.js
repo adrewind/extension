@@ -46,7 +46,8 @@ export default class FragmentSelectionBar {
     // Prevents hiding controls by Player due to inactivity
     keepShown() {
         this.keepInterval = setInterval(() => {
-            const event = createMouseEvent();
+            // Mouse events causes glitches use different techniques
+            // const event = createMouseEvent();
             this.element.dispatchEvent(event);
         }, 500);
     }
@@ -184,25 +185,26 @@ export default class FragmentSelectionBar {
     }
 }
 
-function createMouseEvent(type = 'mousemove') {
-    const screenX = 50;
-    const screenY = 50;
-    const clientY = 50;
-    const clientX = 50 + (Math.random() * 10);
-    const [ctrlKey, altKey, shiftKey, metaKey] = [false, false, false, false];
-
-    const mouseMoveEvent = document.createEvent('MouseEvents');
-    mouseMoveEvent.initMouseEvent(
-       type,
-       true, // canBubble
-       false, // cancelable
-       window, // event's AbstractView : should be window
-       1, // detail : Event's mouse click count
-       screenX, screenY,
-       clientX, clientY,
-       ctrlKey, altKey, shiftKey, metaKey,
-       0, // button : 0 = click, 1 = middle button, 2 = right button
-       null // relatedTarget : Only used with some event types (e.g. mouseover and mouseout). In other cases, pass null.
-    );
-    return mouseMoveEvent;
-}
+// function createMouseEvent(type = 'mousemove') {
+//     const screenX = 50;
+//     const screenY = 50;
+//     const clientY = 50;
+//     const clientX = 50 + (Math.random() * 10);
+//     const [ctrlKey, altKey, shiftKey, metaKey] = [false, false, false, false];
+//
+//     const mouseMoveEvent = document.createEvent('MouseEvents');
+//     mouseMoveEvent.initMouseEvent(
+//        type,
+//        true, // canBubble
+//        false, // cancelable
+//        window, // event's AbstractView : should be window
+//        1, // detail : Event's mouse click count
+//        screenX, screenY,
+//        clientX, clientY,
+//        ctrlKey, altKey, shiftKey, metaKey,
+//        0, // button : 0 = click, 1 = middle button, 2 = right button
+//        null // relatedTarget :
+//        Only used with some event types (e.g. mouseover and mouseout). In other cases, pass null.
+//     );
+//     return mouseMoveEvent;
+// }

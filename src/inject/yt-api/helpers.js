@@ -1,7 +1,7 @@
 import { ELEMENT_LOCATE_FREQ } from '../config';
 
 
-export async function untilLocated(locateFunc) {
+export default async function untilLocated(locateFunc) {
     return new Promise((resolve) => {
         const wait = setInterval(() => {
             const found = locateFunc();

@@ -1,8 +1,8 @@
 import User from './user';
 import PlayerAds from './player-ads';
+import untilLocated from './helpers';
 import PlayerEvents from './player-events';
 import PlayerAnnotations from './player-annotations';
-import { untilLocated } from './helpers';
 
 
 export default class Player {
