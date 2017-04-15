@@ -1,0 +1,5 @@
+// We use it for test purposes only
+// because node.js don't support es6 imports
+{
+  "presets": ["es2015"]
+}
