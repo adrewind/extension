@@ -50,7 +50,7 @@ class ExtensionBuilder {
     discoverResources() {
         return fs.readdirSync(this.srcpath)
                  .filter(localpath => !localpath.startsWith('.'))
-                 .filter(localpath => localpath.match(this.whiteList))
+                 .filter(localpath => localpath.match(this.whiteList));
     }
 
 }

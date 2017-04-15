@@ -2,12 +2,12 @@
 class FakeChromeStorage {
 
     constructor() {
-        this.storage = {}
+        this.storage = {};
     }
 
-    getFilter(raw) {
+    static getFilter(raw) {
         if (raw === null) {
-            return k => true;
+            return () => true;
         }
 
         if (typeof raw === 'string') {
@@ -15,21 +15,22 @@ class FakeChromeStorage {
         }
 
         if (Array.isArray(raw)) {
-            console.log("INCLUDES")
             return k => raw.includes(k);
-        } else {
+        }
+
+        if (Object.keys(raw).length > 0) {
             return k => Object.keys(raw).includes(k);
         }
-        return k => false;
+        return () => false;
     }
 
     get(key, callback) {
         const result = {};
-        const allowed = this.getFilter(key);
+        const allowed = FakeChromeStorage.getFilter(key);
 
         Object.keys(this.storage)
               .filter(allowed)
-              .forEach((k) => { result[k] = this.storage[k] });
+              .forEach((k) => { result[k] = this.storage[k]; });
         callback(result);
     }
 
@@ -45,6 +46,8 @@ class FakeChromeStorage {
         Object.keys(this.storage)
               .filter(allowed)
               .forEach((k) => { delete this.storage[k]; });
+        // TODO: check if original function sends something to callback
+        callback();
     }
 
     flush() {

@@ -17,6 +17,7 @@ export default class PlayerAnnotations {
         gear.click();
         gear.click();
         this.toggle = document.querySelector('[role="menuitemcheckbox"]:nth-child(2)');
+        return this.toggle;
     }
 
     isShown() {

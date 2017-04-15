@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "node build",
-    "lint": "eslint .",
+    "lint": "node_modules/.bin/eslint .",
     "test": "npm run test-mocha && npm run test-cucumber",
     "test-mocha": "mocha --compilers js:babel-core/register --require test/base",
     "test-cucumber": "node_modules/.bin/cucumber-js"
@@ -32,5 +32,12 @@
     "selenium-webdriver": "^3.3.0",
     "sinon": "^2.1.0",
     "webpack": "^2.3.3"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.3",
+    "eslint-plugin-import": "^2.2.0"
   }
 }

@@ -35,8 +35,7 @@ class WebpackBuilder {
                 }
                 this.printStats(stats);
                 return resolve();
-            })
-        );
+            }));
     }
 
     static formatStats(stats) {

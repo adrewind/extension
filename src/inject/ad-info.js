@@ -30,11 +30,11 @@ export default class ADInfo {
                 return data.fragments;
             }
 
-            return this.loadFragments(videoID);
+            return ADInfo.loadFragments(videoID);
         });
     }
 
-    loadFragments(videoID) {
+    static loadFragments(videoID) {
         return proxyXHR(`${API_ENDPOINT_VIDEOS}/video/${videoID}/`).then(({ data, status }) => {
             if (status === 200) {
                 return data;

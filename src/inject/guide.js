@@ -3,11 +3,9 @@
 class ADRGuideViewer {
 
     constructor() {
-        const controls = this.findControls();
-        this.container = controls;
-
         this.image = null;
-        this.element = this.createElement();
+        this.container = ADRGuideViewer.findControls();
+        this.element = ADRGuideViewer.createElement();
         this.container.appendChild(this.element);
 
         this.images = {
@@ -26,11 +24,11 @@ class ADRGuideViewer {
         this.element.style.display = 'none';
     }
 
-    findControls() {
+    static findControls() {
         return document.getElementsByClassName('html5-video-player')[0] || null;
     }
 
-    createElement() {
+    static createElement() {
         const container = document.createElement('div');
         container.classList.add('adr-guide-container');
 
@@ -49,7 +47,8 @@ class ADRGuideViewer {
 
     showScreen(name, locale) {
         const imageURL = chrome.extension.getURL(`images/${name}-${locale}.svg`);
-        const { height, width, shiftBottom = 0, shiftRight = 0 } = this.images[name];
+        const { shiftBottom = 0, shiftRight = 0 } = this.images[name];
+        // const { height, width, shiftBottom = 0, shiftRight = 0 } = this.images[name];
 
         const image = document.createElement('img');
         image.classList.add('screen-image');
@@ -83,7 +82,7 @@ class ADRGuideViewer {
 
     stickTo(element) {
         const container = element.getBoundingClientRect();
-        const image = this.image.getBoundingClientRect();
+        // const image = this.image.getBoundingClientRect();
 
         const imageCenter = {
             x: container.right - (this.width / 2),
@@ -169,6 +168,17 @@ class ADRGuide {
     }
 
     showPlayheadHelp() {
+        const showSecond = () => {
+            const playhead = document.getElementsByClassName('adr-playhead-right')[0];
+            if (!playhead) {
+                return;
+            }
+            this.viewer.showHint('guide-removal', this.locale);
+            this.viewer.stickTo(playhead);
+
+            this.viewer.element.removeEventListener('click', showSecond);
+        };
+
         const showFirst = () => {
             const playhead = document.getElementsByClassName('adr-playhead-right')[0];
             if (!playhead) {
@@ -179,17 +189,6 @@ class ADRGuide {
             this.video.pause();
 
             this.viewer.element.addEventListener('click', showSecond);
-        };
-
-        const showSecond = () => {
-            const playhead = document.getElementsByClassName('adr-playhead-right')[0];
-            if (!playhead) {
-                return;
-            }
-            this.viewer.showHint('guide-removal', this.locale);
-            this.viewer.stickTo(playhead);
-
-            this.viewer.element.removeEventListener('click', showSecond);
         };
 
         const wait = () => {
@@ -214,7 +213,7 @@ export default async function showGuide(player) {
         return;
     }
 
-    const guide = new ADRGuide(player);
+    chrome.adr.guide = new ADRGuide(player);
 
     // guide.showHint('guide-hello', 'en');
     // guide.stickTo(adButton);
