@@ -2,13 +2,12 @@ const { defineSupportCode } = require('cucumber');
 
 
 defineSupportCode((functions) => {
-  const given = functions.Given;
-  const when = functions.When;
-  const then = functions.Then;
+    const given = functions.Given;
+    // const when = functions.When;
+    // const then = functions.Then;
 
-  given('I on the {stringInDoubleQuotes} channel', function _given(chanID) {
-    const url = `https://www.youtube.com/user/${chanID}#adr-no-guide`;
-    return this.driver.get(url);
-  });
-
+    given('I on the {stringInDoubleQuotes} channel', function _given(chanID) {
+        const url = `https://www.youtube.com/user/${chanID}#adr-no-guide`;
+        return this.driver.get(url);
+    });
 });
