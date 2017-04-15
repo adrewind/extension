@@ -4,5 +4,18 @@
 //     'sample_setting': 'This is how you use Store.js to remember values'
 // });
 
-import './sync';
 import './proxy';
+import Sync from './sync';
+import { SYNC_ALARM_PERIOD } from './config';
+
+
+chrome.alarms.create('sync', { periodInMinutes: SYNC_ALARM_PERIOD });
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+    if (alarm.name !== 'sync') {
+        return;
+    }
+
+    const sync = new Sync();
+    sync.run();
+});
