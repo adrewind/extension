@@ -18,4 +18,7 @@ module.exports = {
         injectJS: `./${injectSrc}/inject.js`,
         injectCSS: `${injectSrc}/styles/index.css`,
     },
+    globals: {
+        environment: process.env.NODE_ENV,
+    },
 };
