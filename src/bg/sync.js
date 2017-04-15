@@ -1,5 +1,5 @@
 import xhrRequest from './xhr';
-import { API_ENDPOINT_REPORTS, SYNC_MATURITY_TRESHOLD, SYNC_ALARM_PERIOD } from './config';
+import { API_ENDPOINT_REPORTS, SYNC_MATURITY_TRESHOLD } from './config';
 // TODO: check if there is not enough storage, delete old synced items
 
 Promise.sequentially = iterable =>
@@ -10,7 +10,7 @@ Promise.sequentially = iterable =>
 class AuthError extends Error { }
 
 
-class Sync {
+export default class Sync {
 
     constructor() {
         this.storage = chrome.storage.local;
@@ -101,16 +101,3 @@ class Sync {
     }
 
 }
-
-
-chrome.alarms.create('sync', { periodInMinutes: SYNC_ALARM_PERIOD });
-
-chrome.alarms.onAlarm.addListener((alarm) => {
-    if (alarm.name !== 'sync') {
-        return;
-    }
-
-    const sync = new Sync();
-    sync.run();
-});
-

@@ -13,6 +13,10 @@ const webpackConfig = {
         filename: '[name].js',
     },
     devtool: '#inline-source-map',
+    plugins: [
+        // Add global variables to
+        new webpack.DefinePlugin(config.globals),
+    ],
 };
 
 

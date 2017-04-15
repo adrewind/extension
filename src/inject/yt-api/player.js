@@ -6,6 +6,9 @@ import { untilLocated } from './helpers';
 
 
 export default class Player {
+    constructor() {
+        this.user = new User();
+    }
     /*
      * Wait for init before use, for ex:
      *
@@ -18,7 +21,6 @@ export default class Player {
         this.video = await Player.untilVideoAppears();
         this.vidlink = await Player.untilVideoLinkAppears();
 
-        this.user = new User();
         this.ads = new PlayerAds();
         this.events = new PlayerEvents(this.video);
         this.annotations = new PlayerAnnotations();
