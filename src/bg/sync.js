@@ -2,12 +2,10 @@ import xhrRequest from './xhr';
 import { API_ENDPOINT_REPORTS, SYNC_MATURITY_TRESHOLD } from './config';
 // TODO: check if there is not enough storage, delete old synced items
 
+// TODO: move it to helpers
 Promise.sequentially = iterable =>
     iterable.reduce((p, fn) =>
         p.then(fn), Promise.resolve());
-
-
-class AuthError extends Error { }
 
 
 export default class Sync {
@@ -32,33 +30,31 @@ export default class Sync {
         });
     }
 
-    run() {
-        // TODO: Automatic tests for sync
-        // TODO: [^] Improve readability using asyc / await
-        this.findUnsynced()
-            .then((found) => {
-                if (found.length < 1) {
-                    return null;
-                }
-                return this.findChannelId()
-                    .then(id => this.auth(id))
-                    .then(() => this.sendToServer(found))
-                    .catch(e => e instanceof AuthError ? console.log(e) : e);
-            });
+    async run() {
+        const found = await this.findUnsynced();
+        if (found.length < 1) {
+            return null;
+        }
+        const channel = await this.findChannelId();
+        const authenticated = await this.auth(channel);
+        if (!authenticated) {
+            return null;
+        }
+        return this.sendToServer(found);
     }
 
-    auth(channel) {
+    async auth(channel) {
         const params = channel ? { channel } : { anonymous: true };
-        return xhrRequest('POST', this.urlAuth, params)
-            .then(({ status, data }) => {
-                if (status !== 200) {
-                    throw new AuthError('status != 200');
-                }
-                if (!data.authenticated) {
-                    throw new AuthError('not authenticated');
-                }
-                return true;
-            });
+        const { status, data } = await xhrRequest('POST', this.urlAuth, params);
+        if (status !== 200) {
+            console.log('AuthError: status != 200');
+            return false;
+        }
+        if (!data.authenticated) {
+            console.log('AuthError: not authenticated');
+            return false;
+        }
+        return true;
     }
 
     findChannelId() {
@@ -67,17 +63,14 @@ export default class Sync {
                 resolve(data['##ytchan'] || null)));
     }
 
-    sendInfo([videoID, info]) {
+    async sendInfo([videoID, info]) {
         const url = `${this.urlReport}${videoID}/`;
+        const { status, data } = await xhrRequest('PUT', url, info.fragments);
 
-        return new Promise(() =>
-            xhrRequest('PUT', url, info.fragments)
-                .then(({ status, data }) => {
-                    if (status === 200 && data && data.updated) {
-                        this.markAsSubmitted(videoID, info);
-                    }
-                    return null;
-                }));
+        if (status === 200 && data && data.updated) {
+            this.markAsSubmitted(videoID, info);
+        }
+        return null;
     }
 
     sendToServer(items) {
