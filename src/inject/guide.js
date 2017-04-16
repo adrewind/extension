@@ -207,11 +207,11 @@ class ADRGuide {
 // document.getElementsByClassName('close-button')[0].click()
 
 export default async function showGuide(player) {
-    const hash = window.location.hash;
-
-    if (hash.match(/adr-no-guide/ig)) {
-        return;
-    }
+    // const hash = window.location.hash;
+    //
+    // if (hash.match(/adr-no-guide/ig)) {
+    //     return;
+    // }
 
     chrome.adr.guide = new ADRGuide(player);
 

@@ -4,6 +4,9 @@ Feature: Entry points
   To use plugin
   It should be loaded from any entry point
 
+  Background:
+    Given Local storage state is "{'###guide': 1}"
+
   Scenario: Main page as entry point
     Given I on the "https://www.youtube.com/" page
     And I skip In-Stream ad if it needed

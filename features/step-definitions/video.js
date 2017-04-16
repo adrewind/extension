@@ -11,7 +11,7 @@ defineSupportCode((functions) => {
     // const then = functions.Then;
 
     given('I am watch {stringInDoubleQuotes} video', function _given(videoID) {
-        const url = `https://www.youtube.com/watch?v=${videoID}#adr-no-guide`;
+        const url = `https://www.youtube.com/watch?v=${videoID}`;
         return this.driver.get(url);
     });
 

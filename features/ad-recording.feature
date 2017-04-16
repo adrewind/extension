@@ -4,6 +4,9 @@ Feature: Ad fragment selection
   In order to report about ad inside video
   I should be able to select ad fragment
 
+  Background:
+    Given Local storage state is "{'###guide': 1}"
+
   Scenario: Recording ad fragment
     Given I am watch "mKzLoZFz8PE" video
     And I skip In-Stream ad if it needed

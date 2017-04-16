@@ -4,7 +4,6 @@
   "manifest_version": 2,
   "description": "This plugin skips video fragments with an advertisement placed by the author.",
   "homepage_url": "http://adrewind.net",
-  "run_at": "document_start",
   "icons": {
     "16": "icons/no-ad-icon-16.png",
     "32": "icons/no-ad-icon-32.png",

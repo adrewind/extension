@@ -7,7 +7,7 @@ defineSupportCode((functions) => {
     // const then = functions.Then;
 
     given('I on the {stringInDoubleQuotes} channel', function _given(chanID) {
-        const url = `https://www.youtube.com/user/${chanID}#adr-no-guide`;
+        const url = `https://www.youtube.com/user/${chanID}`;
         return this.driver.get(url);
     });
 });

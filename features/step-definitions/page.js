@@ -7,6 +7,6 @@ defineSupportCode((functions) => {
     // const then = functions.Then;
 
     given('I on the {stringInDoubleQuotes} page', function _given(page) {
-        return this.driver.get(`${page}#adr-no-guide`);
+        return this.driver.get(page);
     });
 });
