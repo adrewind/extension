@@ -148,7 +148,7 @@ class ADRGuide {
         this.adButton.classList.add('adr-pulse');
 
         const nopulse = () => {
-            this.adButton.classList.remove('pulse');
+            this.adButton.classList.remove('adr-pulse');
             this.adButton.removeEventListener('adr-click', nopulse);
 
             this.highlightBar(); // TODO: Find better place for it
@@ -212,8 +212,7 @@ export default async function showGuide(player) {
     // if (hash.match(/adr-no-guide/ig)) {
     //     return;
     // }
-
-    chrome.adr.guide = new ADRGuide(player);
+    chrome.adrGuide = new ADRGuide(player);
 
     // guide.showHint('guide-hello', 'en');
     // guide.stickTo(adButton);

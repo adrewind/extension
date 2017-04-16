@@ -15,4 +15,14 @@ async function shouldSeeElement(driver, query,
     return element;
 }
 
-module.exports = { shouldSeeElement };
+function shouldNotSeeElement(driver, query) {
+    const locating = until.elementLocated(query);
+
+    return driver
+        .wait(locating, WAIT_LOCATED)
+        .then(() => driver.findElement(query), () => false)
+        .then(el => el && driver.wait(until.elementIsNotVisible(el), WAIT_DISPLAY))
+        ;
+}
+
+module.exports = { shouldSeeElement, shouldNotSeeElement };

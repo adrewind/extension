@@ -1,5 +1,5 @@
 const { defineSupportCode } = require('cucumber');
-const { shouldSeeElement } = require('./common');
+const { shouldSeeElement, shouldNotSeeElement } = require('./common');
 
 const { WAIT_FOR_PLUGIN } = require('../support/constants');
 
@@ -26,6 +26,11 @@ defineSupportCode((functions) => {
     then('I should see {stringInDoubleQuotes} element', function _then(selector) {
         const query = { css: selector };
         return shouldSeeElement(this.driver, query);
+    });
+
+    then('I should not see {stringInDoubleQuotes} element', function _then(selector) {
+        const query = { css: selector };
+        return shouldNotSeeElement(this.driver, query);
     });
 
     then('I should see AD button', function _then() {
