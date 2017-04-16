@@ -5,7 +5,7 @@ Feature: Entry points
   It should be loaded from any entry point
 
   Background:
-    Given Local storage state is "{'###guide': 1}"
+    Given Local storage state is "{'###guide': 3}"
 
   Scenario: Main page as entry point
     Given I on the "https://www.youtube.com/" page

@@ -5,7 +5,7 @@ Feature: Icon in right panel of Youtube player
   I should be able to see ᏆAD icon
 
   Background:
-    Given Local storage state is "{'###guide': 1}"
+    Given Local storage state is "{'###guide': 3}"
 
   Scenario: Trying to open
     Given I am watch "mKzLoZFz8PE" video

@@ -7,12 +7,13 @@ export default class ADRGuideViewer {
         this.container = ADRGuideViewer.findControls();
         this.element = ADRGuideViewer.createElement();
         this.container.appendChild(this.element);
+        this.container.addEventListener('click', () => this.hide());
 
         this.images = {
             'guide-hello': { squeezeBottom: 16 },
-            'guide-ad-menu': { height: 141, width: 219, shiftBottom: -70, shiftRight: 11 },
-            'guide-playhead': { height: 179, width: 463, shiftBottom: 25.5, shiftRight: -45 },
-            'guide-removal': { height: 303, width: 387, shiftBottom: -250, shiftRight: 45 },
+            'guide-ad-menu': { height: 141, width: 219, shiftBottom: 0, shiftRight: 0 },
+            'guide-playhead': { height: 179, width: 463, shiftBottom: -148, shiftRight: -35 },
+            'guide-removal': { height: 303, width: 387, shiftBottom: -249, shiftRight: -34 },
         };
     }
 
@@ -41,14 +42,12 @@ export default class ADRGuideViewer {
         }
         this.show();
         this.image = imgTag;
-        this.image.addEventListener('click', () => this.hide());
         this.element.appendChild(imgTag);
     }
 
     showScreen(name, locale) {
         const imageURL = chrome.extension.getURL(`images/${name}-${locale}.svg`);
         const { shiftBottom = 0, shiftRight = 0 } = this.images[name];
-        // const { height, width, shiftBottom = 0, shiftRight = 0 } = this.images[name];
 
         const image = document.createElement('img');
         image.classList.add('screen-image');
@@ -67,9 +66,6 @@ export default class ADRGuideViewer {
         const image = document.createElement('img');
         image.classList.add('tip-image');
         image.src = imageURL;
-
-        image.style.bottom = 0;
-        image.style.right = 0;
         image.style.height = `${height}px`;
 
         this.width = width;
@@ -81,19 +77,14 @@ export default class ADRGuideViewer {
     }
 
     stickTo(element) {
-        const container = element.getBoundingClientRect();
-        // const image = this.image.getBoundingClientRect();
+        const anchor = element.getBoundingClientRect();
+        const container = this.element.getBoundingClientRect();
 
-        const imageCenter = {
-            x: container.right - (this.width / 2),
-            y: container.bottom - (this.height / 2),
-        };
+        const top = (anchor.top - container.top) + this.shiftBottom + (anchor.height / 2);
+        const left = (anchor.left - container.left) + this.shiftRight + (anchor.width / 2);
 
-        const bottom = (container.bottom - imageCenter.y) + this.shiftBottom;
-        const right = (container.right - imageCenter.x) + this.shiftRight;
-
-        this.image.style.bottom = `${bottom}px`;
-        this.image.style.right = `${right}px`;
+        this.image.style.top = `${top}px`;
+        this.image.style.left = `${left}px`;
     }
 }
 

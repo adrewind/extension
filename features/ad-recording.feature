@@ -5,7 +5,7 @@ Feature: Ad fragment selection
   I should be able to select ad fragment
 
   Background:
-    Given Local storage state is "{'###guide': 1}"
+    Given Local storage state is "{'###guide': 3}"
 
   Scenario: Recording ad fragment
     Given I am watch "mKzLoZFz8PE" video

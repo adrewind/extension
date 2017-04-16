@@ -3,6 +3,7 @@ import ADRGuideViewer from './guide-stickers';
 const STEP_HELLO = 0;
 const STEP_AD_PULSE = 1;
 const STEP_PLAYHEAD = 2;
+const STEP_COMPLETE = 3;
 
 class ADRGuide {
 
@@ -19,11 +20,10 @@ class ADRGuide {
             const step = found['###guide'] || 0;
             this.showStep(step);
         });
-        // this.showPlayheadHelp();
     }
 
     showStep(step) {
-        this.storage.set({ '###guide': step });
+        this.storage.set({ '###guide': step }, () => null);
 
         if (step === STEP_HELLO) {
             return this.showHello();
@@ -34,8 +34,7 @@ class ADRGuide {
         }
 
         if (step === STEP_PLAYHEAD) {
-            // TODO: wait for playhead
-            // return this.highlightBar();
+            this.showPlayheadHelp();
         }
         return null;
     }
@@ -90,18 +89,22 @@ class ADRGuide {
     }
 
     showPlayheadHelp() {
-        const showSecond = () => {
-            const playhead = document.getElementsByClassName('adr-playhead-right')[0];
-            if (!playhead) {
+        const showRemovingHelp = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const selection = document.getElementsByClassName('adr-sel-bg')[0];
+            if (!selection) {
                 return;
             }
             this.viewer.showHint('guide-removal', this.locale);
-            this.viewer.stickTo(playhead);
+            this.viewer.stickTo(selection);
 
-            this.viewer.element.removeEventListener('click', showSecond);
+            this.showStep(STEP_COMPLETE);
+            this.viewer.element.removeEventListener('click', showRemovingHelp);
         };
 
-        const showFirst = () => {
+        const showPlayheadHelp = () => {
             const playhead = document.getElementsByClassName('adr-playhead-right')[0];
             if (!playhead) {
                 return;
@@ -110,15 +113,23 @@ class ADRGuide {
             this.viewer.stickTo(playhead);
             this.video.pause();
 
-            this.viewer.element.addEventListener('click', showSecond);
+            this.viewer.element.addEventListener('click', showRemovingHelp);
         };
 
-        const wait = () => {
-            setTimeout(showFirst, 2700);
-            this.helpText.removeEventListener('click', wait);
+        const secondClick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            showPlayheadHelp();
+            this.helpText.removeEventListener('click', secondClick);
         };
 
-        this.helpText.addEventListener('click', wait);
+        const firstClick = () => {
+            this.helpText.addEventListener('click', secondClick);
+            this.helpText.removeEventListener('click', firstClick);
+        };
+
+        this.helpText.addEventListener('click', firstClick);
     }
 
 }
