@@ -29,3 +29,12 @@ Feature: Guide
     And I wait "2" seconds
     And I should see ".adr-ad-help-text.highlight.inactive" element
     And I should not see ".adr-mark-ad-button.adr-pulse" element
+
+  Scenario: Click AD button and reload page
+    Given I am watch "toDEHZzsIGw" video
+    When I wait "3" seconds
+    And I click ".adr-guide-container .screen-image" element
+    And I reload the page
+    # TODO: Keep controls shown even if video is playing
+    And I wait "2" seconds
+    Then I should see ".adr-mark-ad-button.adr-pulse" element
