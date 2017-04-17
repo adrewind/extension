@@ -62,7 +62,7 @@ class ExtensionBuilder {
     fs.writeFileSync(config.bundle.bgHTML, fs.readFileSync(config.entry.bgHTML));
 
     // TODO: Read version from manifest
-    const builder = new ExtensionBuilder('build', 'extension-0.0.3.zip');
+    const builder = new ExtensionBuilder('build', 'extension-0.0.4.zip');
     // const builder = new ExtensionBuilder('build/extension.zip');
     // builder.addResource('icons');
     builder.build();

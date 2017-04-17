@@ -1,6 +1,6 @@
 {
   "name": "adrewind",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "This plugin skips video fragments with an advertisement placed by the author.",
   "main": "index.js",
   "directories": {
