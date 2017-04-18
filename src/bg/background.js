@@ -5,6 +5,7 @@
 // });
 
 import './proxy';
+import './bugfix/playhead-negative-time';  // TODO: Remove me 18.05.2017
 import Sync from './sync';
 import { SYNC_ALARM_PERIOD } from './config';
 

@@ -40,8 +40,8 @@ export default class FragmentSelection {
         this.leftFrameByFrame = new FrameByFrameControls(this.video, this.leftPlayhead.element);
         this.rightFrameByFrame = new FrameByFrameControls(this.video, this.rightPlayhead.element);
 
-        this.leftFrameByFrame.onstep = direction => this.onStep('left', direction);
-        this.rightFrameByFrame.onstep = direction => this.onStep('right', direction);
+        this.leftFrameByFrame.onstep = direction => this.frameStep('left', direction);
+        this.rightFrameByFrame.onstep = direction => this.frameStep('right', direction);
 
         selection.appendChild(background);
         selection.appendChild(this.leftPlayhead.element);
@@ -62,15 +62,17 @@ export default class FragmentSelection {
     }
 
     setStartTime(time) {
-        this.start = time;
+        const fixed = Math.max(0, time);
+        this.start = fixed;
         this.redraw();
-        this.video.currentTime = time;
+        this.video.currentTime = fixed;
     }
 
     setEndTime(time) {
-        this.end = time;
+        const fixed = Math.min(time, this.video.duration);
+        this.end = fixed;
         this.redraw();
-        this.video.currentTime = time;
+        this.video.currentTime = fixed;
     }
 
     setStartPosition(time) {
@@ -137,7 +139,7 @@ export default class FragmentSelection {
         this.onremoved = callback;
     }
 
-    onStep(playhead, direction) {
+    frameStep(playhead, direction) {
         const frameTime = 1 / 30;
         const sign = direction === 'back' ? -1 : 1;
 
