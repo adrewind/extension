@@ -2,6 +2,7 @@
   "name": "ADRewind for Youtube™",
   "version": "0.0.4",
   "manifest_version": 2,
+  "minimum_chrome_version": "55.0",
   "description": "This plugin skips video fragments with an advertisement placed by the author.",
   "homepage_url": "http://adrewind.net",
   "icons": {

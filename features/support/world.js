@@ -1,4 +1,5 @@
 require('chromedriver');
+const npmPackage = require('../../package.json');
 const seleniumWebdriver = require('selenium-webdriver');
 const { defineSupportCode } = require('cucumber');
 
@@ -23,7 +24,7 @@ function SauceWorld() {
         browserName: 'chrome',
         version: '55.0',
         platform: 'Windows 10',
-        name: 'Sample selenium-webdriver test',
+        name: `${npmPackage.name} ${npmPackage.version} test`,
         username: process.env.SAUCE_USERNAME,
         accessKey: process.env.SAUCE_ACCESS_KEY,
     };
