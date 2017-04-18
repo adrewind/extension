@@ -20,15 +20,14 @@ Feature: Guide
 
   Scenario: Highlight clickable area
     Given I am watch "toDEHZzsIGw" video
-    When I wait "3" seconds
-    And I skip In-Stream ad if it needed
+    When I wait "2" seconds
     And I click ".adr-guide-container .screen-image" element
+    And I skip In-Stream ad if it needed
     # TODO: Keep controls shown even if video is playing
     And I pause the video
     And I click ".adr-mark-ad-button.adr-pulse" element
     Then I should see ".adr-ad-help-text.highlight" element
-    And I should not see ".adr-ad-help-text.highlight.inactive" element
-    And I wait "2" seconds
+    And I wait "3" seconds
     And I should see ".adr-ad-help-text.highlight.inactive" element
     And I should not see ".adr-mark-ad-button.adr-pulse" element
 
@@ -37,16 +36,17 @@ Feature: Guide
     When I wait "3" seconds
     And I click ".adr-guide-container .screen-image" element
     And I reload the page
-    # TODO: Keep controls shown even if video is playing
     And I wait "2" seconds
+    # TODO: Keep controls shown even if video is playing
+    And I pause the video
     Then I should see ".adr-mark-ad-button.adr-pulse" element
 
   Scenario: Playhead help text
     Given I am watch "8ZtInClXe1Q" video
-    And I skip In-Stream ad if it needed
-    When I wait "3" seconds
+    When I wait "2" seconds
     And I click ".adr-guide-container .screen-image" element
-    And I click ".adr-mark-ad-button" element
+    And I skip In-Stream ad if it needed
+    And I click AD button
     And I wait "5" seconds
     And I click ".adr-ad-help-text" element
     And I wait "10" seconds

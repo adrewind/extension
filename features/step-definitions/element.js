@@ -1,7 +1,8 @@
+const { until } = require('selenium-webdriver');
 const { defineSupportCode } = require('cucumber');
 const { shouldSeeElement, shouldNotSeeElement } = require('./common');
 
-const { WAIT_FOR_PLUGIN } = require('../support/constants');
+const { WAIT_LOCATED, WAIT_DISPLAY, WAIT_FOR_PLUGIN } = require('../support/constants');
 
 
 defineSupportCode((functions) => {
@@ -17,9 +18,17 @@ defineSupportCode((functions) => {
 
     then('I click AD button', async function _when() {
         const query = { css: '.adr-mark-ad-button' };
+        const present = until.elementLocated(query);
+        const element = await this.driver.wait(present, WAIT_LOCATED);
+
+        const actions = this.driver.actions();
+        const move = actions.mouseMove(element);
+        await move.perform();
+
         // TODO: make plugin faster, get rid of it
-        await shouldSeeElement(this.driver, query, WAIT_FOR_PLUGIN);
-        const element = this.driver.findElement(query);
+        const visible = until.elementIsVisible(element);
+        await this.driver.wait(visible, WAIT_DISPLAY);
+
         await element.click();
     });
 
