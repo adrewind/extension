@@ -1,8 +1,9 @@
+import { body, NoElementError } from './common';
 
-class ADJumper {
 
-    constructor() {
-        const video = adrElements.findVideoTag();
+export default class ADJumper {
+
+    constructor(video) {
         if (!video) {
             throw new NoElementError('video tag is not found');
         }
@@ -10,8 +11,8 @@ class ADJumper {
         this.skip = [];
         this.active = true;
 
-        this.body = adrElements.body;
-        this.video = adrElements.video;
+        this.body = body;
+        this.video = video;
 
         this.handleEvents();
     }
@@ -73,7 +74,6 @@ class ADJumper {
 
         // TODO: refactor, add J and L keys
         this.body.addEventListener('keyup', (e) => {
-
             if (!tracking.includes(e.keyCode)) {
                 return;
             }

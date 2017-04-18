@@ -1,124 +1,45 @@
+import ADRGuideViewer from './guide-stickers';
 
-class ADRGuideViewer {
-
-    constructor() {
-        const controls = this.findControls();
-        this.container = controls;
-
-        this.image = null;
-        this.element = this.createElement();
-        this.container.appendChild(this.element);
-
-        this.images = {
-            'guide-hello': { squeezeBottom: 16 },
-            'guide-ad-menu': { height: 141, width: 219, shiftBottom: -70, shiftRight: 11 },
-            'guide-playhead': { height: 179, width: 463, shiftBottom: 25.5, shiftRight: -45},
-            'guide-removal': { height: 303, width: 387, shiftBottom: -250, shiftRight: 45},
-        }
-    }
-
-    show() {
-        this.element.style.display = '';
-    }
-
-    hide() {
-        this.element.style.display = 'none';
-    }
-
-    findControls() {
-        return document.getElementsByClassName('html5-video-player')[0] || null;
-    }
-
-    createElement() {
-        const container = document.createElement('div');
-        container.classList.add('adr-guide-container');
-
-        return container;
-    }
-
-    replaceImage(imgTag) {
-        if (this.image) {
-            this.image.remove();
-        }
-        this.show();
-        this.image = imgTag;
-        this.image.addEventListener('click', () => this.hide());
-        this.element.appendChild(imgTag);
-    }
-
-    showScreen(name, locale) {
-        const imageURL = chrome.extension.getURL(`images/${name}-${locale}.svg`);
-        const { height, width, shiftBottom = 0, shiftRight = 0 } = this.images[name];
-
-        const image = document.createElement('img');
-        image.classList.add('screen-image');
-        image.src = imageURL;
-
-        image.style.width = `calc(100% + ${shiftRight}px)`;
-        image.style.height = `calc(100% - ${shiftBottom}px)`;
-
-        this.replaceImage(image);
-    }
-
-    showHint(name, locale) {
-        const imageURL = chrome.extension.getURL(`images/${name}-${locale}.svg`);
-        const { height, width, shiftBottom = 0, shiftRight = 0 } = this.images[name];
-
-        const image = document.createElement('img');
-        image.classList.add('tip-image');
-        image.src = imageURL;
-
-        image.style.bottom = 0;
-        image.style.right = 0;
-        image.style.height = `${height}px`;
-
-        this.width = width;
-        this.height = height;
-        this.shiftBottom = shiftBottom;
-        this.shiftRight = shiftRight;
-
-        this.replaceImage(image);
-    }
-
-    stickTo(element) {
-        const container = element.getBoundingClientRect();
-        const image = this.image.getBoundingClientRect();
-
-        const imageCenter = {
-            x: container.right - (this.width / 2),
-            y: container.bottom - (this.height / 2),
-        };
-
-        const bottom = container.bottom - imageCenter.y + this.shiftBottom;
-        const right = container.right - imageCenter.x + this.shiftRight;
-
-        this.image.style.bottom = `${bottom}px`;
-        this.image.style.right = `${right}px`;
-    }
-}
-
+const STEP_HELLO = 0;
+const STEP_AD_PULSE = 1;
+const STEP_PLAYHEAD = 2;
+const STEP_COMPLETE = 3;
 
 class ADRGuide {
 
-    constructor() {
+    constructor(player) {
         this.storage = chrome.storage.local;
-        this.locale = this.getLocale();
-        this.video = adrElements.findVideoTag();
+        this.locale = ADRGuide.getLocale();
+        this.video = player.video;
         this.viewer = new ADRGuideViewer();
 
         this.viewer.hide();
         this.findElements();
 
-        this.storage.get('###guide', found => {
-            if ('###guide' in found) {
-                return;
-            }
-            this.showHello();
+        this.storage.get('###guide', (found) => {
+            const step = found['###guide'] || 0;
+            this.showStep(step);
         });
-        // this.showPlayheadHelp();
     }
 
-    getLocale() {
+    showStep(step) {
+        this.storage.set({ '###guide': step }, () => null);
+
+        if (step === STEP_HELLO) {
+            return this.showHello();
+        }
+
+        if (step === STEP_AD_PULSE) {
+            return this.showButtonPulse();
+        }
+
+        if (step === STEP_PLAYHEAD) {
+            this.showPlayheadHelp();
+        }
+        return null;
+    }
+
+    static getLocale() {
         const accepted = ['ru', 'en'];
         const actual = navigator.language;
 
@@ -138,7 +59,7 @@ class ADRGuide {
         this.viewer.showScreen('guide-hello', this.locale);
 
         const showpulse = () => {
-            this.showButtonPulse();
+            this.showStep(STEP_AD_PULSE);
             this.viewer.element.removeEventListener('click', showpulse);
         };
         this.viewer.element.addEventListener('click', showpulse);
@@ -148,27 +69,42 @@ class ADRGuide {
         this.adButton.classList.add('adr-pulse');
 
         const nopulse = () => {
-            this.adButton.classList.remove('pulse');
+            this.adButton.classList.remove('adr-pulse');
             this.adButton.removeEventListener('adr-click', nopulse);
 
             this.highlightBar(); // TODO: Find better place for it
-        }
-        this.adButton.addEventListener('click', nopulse)
+        };
+        this.adButton.addEventListener('click', nopulse);
     }
 
     highlightBar() {
+        // FIXME: why it doesn't work?
         this.helpText.classList.add('highlight');
         this.helpText.classList.add('inactive');
 
         setTimeout(() => this.helpText.classList.remove('inactive'), 60);
         setTimeout(() => this.helpText.classList.add('inactive'), 2500);
 
-        this.storage.set({'###guide': 1});
+        this.showStep(STEP_PLAYHEAD);
     }
 
     showPlayheadHelp() {
+        const showRemovingHelp = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
 
-        const showFirst = () => {
+            const selection = document.getElementsByClassName('adr-sel-bg')[0];
+            if (!selection) {
+                return;
+            }
+            this.viewer.showHint('guide-removal', this.locale);
+            this.viewer.stickTo(selection);
+
+            this.showStep(STEP_COMPLETE);
+            this.viewer.element.removeEventListener('click', showRemovingHelp);
+        };
+
+        const showPlayheadHelp = () => {
             const playhead = document.getElementsByClassName('adr-playhead-right')[0];
             if (!playhead) {
                 return;
@@ -177,26 +113,23 @@ class ADRGuide {
             this.viewer.stickTo(playhead);
             this.video.pause();
 
-            this.viewer.element.addEventListener('click', showSecond);
-        }
-
-        const showSecond = () => {
-            const playhead = document.getElementsByClassName('adr-playhead-right')[0];
-            if (!playhead) {
-                return;
-            }
-            this.viewer.showHint('guide-removal', this.locale);
-            this.viewer.stickTo(playhead);
-
-            this.viewer.element.removeEventListener('click', showSecond);
+            this.viewer.element.addEventListener('click', showRemovingHelp);
         };
 
-        const wait = () => {
-            setTimeout(showFirst, 2700);
-            this.helpText.removeEventListener('click', wait);
+        const secondClick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            showPlayheadHelp();
+            this.helpText.removeEventListener('click', secondClick);
         };
 
-        this.helpText.addEventListener('click', wait);
+        const firstClick = () => {
+            this.helpText.addEventListener('click', secondClick);
+            this.helpText.removeEventListener('click', firstClick);
+        };
+
+        this.helpText.addEventListener('click', firstClick);
     }
 
 }
@@ -206,18 +139,16 @@ class ADRGuide {
 // TODO: also this selector must be more specific
 // document.getElementsByClassName('close-button')[0].click()
 
-
-adrObserver.waitForVideo().then(() => {
-    const hash = window.location.hash;
-
-    if (hash.match(/adr-no-guide/ig)) {
-        return;
-    }
-
-    const guide = new ADRGuide();
+export default async function showGuide(player) {
+    // const hash = window.location.hash;
+    //
+    // if (hash.match(/adr-no-guide/ig)) {
+    //     return;
+    // }
+    chrome.adrGuide = new ADRGuide(player);
 
     // guide.showHint('guide-hello', 'en');
     // guide.stickTo(adButton);
 
     // guide.showScreen('guide-hello', 'ru');
-});
+}

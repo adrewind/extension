@@ -1,39 +1,21 @@
-// if you checked "fancy-settings" in extensionizr.com, uncomment this lines
+// if you checked 'fancy-settings' in extensionizr.com, uncomment this lines
 
-// var settings = new Store("settings", {
-//     "sample_setting": "This is how you use Store.js to remember values"
+// var settings = new Store('settings', {
+//     'sample_setting': 'This is how you use Store.js to remember values'
 // });
 
-
-//example of using a message handler from the inject scripts
-chrome.extension.onMessage.addListener(
-  function(request, sender, sendResponse) {
-  	chrome.pageAction.show(sender.tab.id);
-    sendResponse();
-  });
+import './proxy';
+import Sync from './sync';
+import { SYNC_ALARM_PERIOD } from './config';
 
 
-chrome.extension.onConnect.addListener((port) => {
-    if (port.name != 'XHRProxy_') {
+chrome.alarms.create('sync', { periodInMinutes: SYNC_ALARM_PERIOD });
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+    if (alarm.name !== 'sync') {
         return;
     }
 
-    // TODO: use XHRRequest
-    port.onMessage.addListener((options) => {
-        const xhr = new XMLHttpRequest();
-
-        const { url } = options;
-        const method = options.method || "GET";
-
-        xhr.open(method, url, true);
-
-        xhr.onloadend = () => {
-            port.postMessage({
-                status: xhr.status,
-                responseText: xhr.responseText,
-            });
-        };
-
-        xhr.send();
-    });
+    const sync = new Sync();
+    sync.run();
 });

@@ -1,11 +1,16 @@
+import Playhead from './playhead';
+import FrameByFrameControls from './frame-by-frame';
+import { body } from '../common';
 
-class FragmentSelection {
 
-    constructor() {
+export default class FragmentSelection {
+
+    constructor(player) {
         this.start = 0;
         this.end = 0;
-        this.video = adrElements.video;
-        this.timeline = adrElements.controlsContainer;
+        this.player = player;
+        this.video = player.video;
+        this.timeline = player.controlsContainer;
         this.element = this.createElement();
         this.dead = false;
         this.onchanged = () => null;
@@ -24,19 +29,19 @@ class FragmentSelection {
         selection.classList.add('adr-ad-selection');
         background.classList.add('adr-sel-bg');
 
-        this.leftPlayhead = new Playhead('left', p => this.setStartPercent(p));
-        this.rightPlayhead = new Playhead('right', p => this.setEndPercent(p));
+        this.leftPlayhead = new Playhead('left', this.player, p => this.setStartPercent(p));
+        this.rightPlayhead = new Playhead('right', this.player, p => this.setEndPercent(p));
 
         this.leftPlayhead.onchanged = () => this.onchanged();
         this.rightPlayhead.onchanged = () => this.onchanged();
         this.leftPlayhead.ondblclick = () => this.leftFrameByFrame.show();
         this.rightPlayhead.ondblclick = () => this.rightFrameByFrame.show();
 
-        this.leftFrameByFrame = new FrameByFrameControls(this.leftPlayhead.element);
-        this.rightFrameByFrame = new FrameByFrameControls(this.rightPlayhead.element);
+        this.leftFrameByFrame = new FrameByFrameControls(this.video, this.leftPlayhead.element);
+        this.rightFrameByFrame = new FrameByFrameControls(this.video, this.rightPlayhead.element);
 
-        this.leftFrameByFrame.onstep = (direction) => this.onStep('left', direction);
-        this.rightFrameByFrame.onstep = (direction) => this.onStep('right', direction);
+        this.leftFrameByFrame.onstep = direction => this.onStep('left', direction);
+        this.rightFrameByFrame.onstep = direction => this.onStep('right', direction);
 
         selection.appendChild(background);
         selection.appendChild(this.leftPlayhead.element);
@@ -79,7 +84,6 @@ class FragmentSelection {
     // Deletion gesture
     handleDrag() {
         let pos = 0;
-        const body = adrElements.body;
 
         const mousemove = (e) => {
             e.preventDefault();
@@ -138,10 +142,10 @@ class FragmentSelection {
         const sign = direction === 'back' ? -1 : 1;
 
         if (playhead === 'left') {
-            const position = this.start + frameTime * sign;
+            const position = this.start + (frameTime * sign);
             this.setStartTime(position);
         } else {
-            const position = this.end + frameTime * sign;
+            const position = this.end + (frameTime * sign);
             this.setEndTime(position);
         }
         // TODO: single point of responsibility

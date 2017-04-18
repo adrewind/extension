@@ -1,0 +1,9 @@
+
+.html5-video-info-panel .adr-button {
+    border: 1px solid white;
+    background: black;
+    color: white;
+    font-weight: bold;
+    opacity: 0.5;
+    cursor: pointer;
+}

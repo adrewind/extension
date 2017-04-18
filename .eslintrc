@@ -8,5 +8,12 @@
   },
   "env": {
     "browser": true
+  },
+  "globals": {
+    "chrome": true,
+    "describe": true,
+    "before": true,
+    "after": true,
+    "it": true
   }
 }

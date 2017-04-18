@@ -1,8 +1,12 @@
+import proxyXHR from './xhr';
+import { API_ENDPOINT_VIDEOS } from './config';
 
-class ADInfo {
 
-    constructor() {
-        this.endpoint = API_ENDPOINT_VIDEOS;
+// TODO: Use async / await
+export default class ADInfo {
+
+    constructor(player) {
+        this.user = player.user;
         this.storage = chrome.storage.local;
     }
 
@@ -26,24 +30,23 @@ class ADInfo {
                 return data.fragments;
             }
 
-            return this.loadFragments(videoID);
+            return ADInfo.loadFragments(videoID);
         });
     }
 
-    loadFragments(videoID) {
-        return proxyXHR(`${this.endpoint}/video/${videoID}/`).then(({data, status}) => {
+    static loadFragments(videoID) {
+        return proxyXHR(`${API_ENDPOINT_VIDEOS}/video/${videoID}/`).then(({ data, status }) => {
             if (status === 200) {
                 return data;
-            } else {
-                // TODO: send it to sentry
-                console.log(status);
             }
+            // TODO: send it to sentry
+            console.log(status);
             return [];
-        })
+        });
     }
 
     updateChannel() {
-        const userid = adrElements.getUserID();
+        const userid = this.user.getID();
         if (!userid) {
             return;
         }

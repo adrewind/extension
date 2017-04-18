@@ -1,9 +1,9 @@
 
-class FrameByFrameControls {
+export default class FrameByFrameControls {
 
-    constructor(playheadEl) {
+    constructor(video, playheadEl) {
         this.createElements();
-        this.video = adrElements.findVideoTag();
+        this.video = video;
         this.onstep = () => null;
 
         playheadEl.appendChild(this.element);
@@ -48,16 +48,16 @@ class FrameByFrameControls {
         const click = (e, direction) => {
             pass(e);
             this.onstep(direction);
-        }
+        };
 
         this.element.addEventListener('click', pass);
         this.element.addEventListener('mousedown', pass);
 
-        this.elBack.addEventListener('click', (e) => click(e, 'back'));
+        this.elBack.addEventListener('click', e => click(e, 'back'));
         this.elBack.addEventListener('mousedown', pass);
         this.elBack.addEventListener('dblclick', pass);
 
-        this.elForward.addEventListener('click', (e) => click(e, 'forth'));
+        this.elForward.addEventListener('click', e => click(e, 'forth'));
         this.elForward.addEventListener('mousedown', pass);
         this.elForward.addEventListener('dblclick', pass);
     }

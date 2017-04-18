@@ -1,5 +1,5 @@
 
-const proxyXHR = (url, params = {}) => new Promise((resolve) => {
+export default (url, params = {}) => new Promise((resolve) => {
     const port = chrome.extension.connect({ name: 'XHRProxy_' });
 
     const settings = {
@@ -12,8 +12,8 @@ const proxyXHR = (url, params = {}) => new Promise((resolve) => {
 
         try {
             data = JSON.parse(msg.responseText);
-        } catch(e) {
-            data = { error: "Error while parsing response" };
+        } catch (e) {
+            data = { error: 'Error while parsing response' };
         }
 
         resolve({

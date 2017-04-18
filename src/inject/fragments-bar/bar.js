@@ -1,20 +1,22 @@
+import FragmentSelection from './fragment';
+import { NoElementError } from '../common';
 
-class FragmentSelectionBar {
 
-    constructor() {
-        const video = adrElements.findVideoTag();
-        const controls = adrElements.findControlsContainer();
+export default class FragmentSelectionBar {
 
-        if (!video) {
+    constructor(player) {
+        if (!player.video) {
             throw new NoElementError('video tag is not found');
         }
-        if (!controls) {
+        if (!player.controlsContainer) {
             throw new NoElementError('youtube controls is not found');
         }
 
-        this.video = video;
-        this.container = controls;
-        this.annotations = new Annotations();
+        this.player = player;
+        this.video = player.video;
+        this.container = player.controlsContainer;
+        this.annotations = player.annotations;
+        this.annotations.findToggle();
 
         this.keepInterval = null;
         this.fragments = [];
@@ -30,13 +32,13 @@ class FragmentSelectionBar {
     }
 
     show() {
-        this.keepShown();
+        // this.keepShown();
         this.element.style.display = '';
         this.annotations.hide();
     }
 
     hide() {
-        this.canBeHidden();
+        // this.canBeHidden();
         this.element.style.display = 'none';
         this.annotations.show();
     }
@@ -44,9 +46,10 @@ class FragmentSelectionBar {
     // Prevents hiding controls by Player due to inactivity
     keepShown() {
         this.keepInterval = setInterval(() => {
-            const event = createMouseEvent();
+            // Mouse events causes glitches use different techniques
+            // const event = createMouseEvent();
             this.element.dispatchEvent(event);
-        }, 500)
+        }, 500);
     }
 
     canBeHidden() {
@@ -64,7 +67,7 @@ class FragmentSelectionBar {
 
         const help = document.createElement('div');
         help.classList.add('adr-ad-help-text');
-        help.innerText = chrome.i18n.getMessage("button_add_new_fragment");
+        help.innerText = chrome.i18n.getMessage('button_add_new_fragment');
         this.helpText = help;
 
         menu.appendChild(help);
@@ -77,7 +80,7 @@ class FragmentSelectionBar {
     }
 
     addFragment() {
-        const sel = new FragmentSelection();
+        const sel = new FragmentSelection(this.player);
         this.fragments.push(sel);
         this.element.appendChild(sel.element);
 
@@ -99,7 +102,7 @@ class FragmentSelectionBar {
 
         this.video.play();
         fragment.redraw();
-        this.helpText.innerText = chrome.i18n.getMessage("button_stop_recording");
+        this.helpText.innerText = chrome.i18n.getMessage('button_stop_recording');
         this.recording = true;
 
         const timeupdate = () => {
@@ -112,7 +115,7 @@ class FragmentSelectionBar {
             this.video.removeEventListener('ended', pause);
             this.video.removeEventListener('pause', pause);
             this.video.removeEventListener('timeupdate', timeupdate);
-            this.helpText.innerText = chrome.i18n.getMessage("button_add_new_fragment");
+            this.helpText.innerText = chrome.i18n.getMessage('button_add_new_fragment');
             this.recording = false;
         };
 
@@ -145,7 +148,7 @@ class FragmentSelectionBar {
 
     // TODO: merge following two functions
     handlePlayerResize() {
-        adrObserver.onPlayerResize(() => this.redrawAllFragments());
+        this.player.events.playerResize(() => this.redrawAllFragments());
     }
 
     redrawAllFragments() {
@@ -158,7 +161,7 @@ class FragmentSelectionBar {
     }
 
     loadFragments(rawFragments) {
-        rawFragments.forEach(f => {
+        rawFragments.forEach((f) => {
             const [start, end] = f;
             const fragment = this.addFragment();
 
@@ -182,25 +185,26 @@ class FragmentSelectionBar {
     }
 }
 
-function createMouseEvent(type = 'mousemove') {
-    const screenX = 50;
-    const screenY = 50;
-    const clientY = 50;
-    const clientX = 50 + Math.random() * 10;
-    const [ctrlKey, altKey, shiftKey, metaKey] = [false, false, false, false];
-
-    const mouseMoveEvent = document.createEvent('MouseEvents');
-    mouseMoveEvent.initMouseEvent(
-       type,
-       true, // canBubble
-       false, // cancelable
-       window, // event's AbstractView : should be window
-       1, // detail : Event's mouse click count
-       screenX, screenY,
-       clientX, clientY,
-       ctrlKey, altKey, shiftKey, metaKey,
-       0, // button : 0 = click, 1 = middle button, 2 = right button
-       null // relatedTarget : Only used with some event types (e.g. mouseover and mouseout). In other cases, pass null.
-    );
-    return mouseMoveEvent;
-}
+// function createMouseEvent(type = 'mousemove') {
+//     const screenX = 50;
+//     const screenY = 50;
+//     const clientY = 50;
+//     const clientX = 50 + (Math.random() * 10);
+//     const [ctrlKey, altKey, shiftKey, metaKey] = [false, false, false, false];
+//
+//     const mouseMoveEvent = document.createEvent('MouseEvents');
+//     mouseMoveEvent.initMouseEvent(
+//        type,
+//        true, // canBubble
+//        false, // cancelable
+//        window, // event's AbstractView : should be window
+//        1, // detail : Event's mouse click count
+//        screenX, screenY,
+//        clientX, clientY,
+//        ctrlKey, altKey, shiftKey, metaKey,
+//        0, // button : 0 = click, 1 = middle button, 2 = right button
+//        null // relatedTarget :
+//        Only used with some event types (e.g. mouseover and mouseout). In other cases, pass null.
+//     );
+//     return mouseMoveEvent;
+// }

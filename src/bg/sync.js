@@ -1,25 +1,27 @@
+import xhrRequest from './xhr';
+import { API_ENDPOINT_REPORTS, SYNC_MATURITY_TRESHOLD } from './config';
 // TODO: check if there is not enough storage, delete old synced items
 
+// TODO: move it to helpers
+Promise.sequentially = iterable =>
+    iterable.reduce((p, fn) =>
+        p.then(fn), Promise.resolve());
 
-Promise.sequentially = (iterable) => {
-    return iterable.reduce((p, fn) => p.then(fn), Promise.resolve())
-}
 
-
-class Sync {
+export default class Sync {
 
     constructor() {
         this.storage = chrome.storage.local;
-        this.urlAuth = API_ENDPOINT_REPORTS + '/auth/';
-        this.urlReport = API_ENDPOINT_REPORTS + '/ad-report/';
+        this.urlAuth = `${API_ENDPOINT_REPORTS}/auth/`;
+        this.urlReport = `${API_ENDPOINT_REPORTS}/ad-report/`;
     }
 
     findUnsynced() {
         const treshold = SYNC_MATURITY_TRESHOLD * 60; // minutes to seconds
         const provenUntil = new Date() - treshold;
 
-        const isTimeProven = ([videoID, info]) => info.updated < provenUntil;
-        const isNotSubmitted = ([videoID, info]) => !info.submitted;
+        const isTimeProven = ([, info]) => info.updated < provenUntil;
+        const isNotSubmitted = ([, info]) => !info.submitted;
 
         return new Promise((resolve) => {
             this.storage.get(null, data => resolve(Object.entries(data)
@@ -28,63 +30,52 @@ class Sync {
         });
     }
 
-    run() {
-        // TODO: Automatic tests for sync
-        // TODO: [^] Improve readability using asyc / await
-        this.findUnsynced().then((items) => {
-            let found = null;
-            return this.findUnsynced()
-                .then((found) => {
-                    if (found.length < 1) {
-                        throw new Error('break');
-                    }
-                    return this.findChannelId();
-                })
-                .then(id => this.auth(id))
-                .then(auth => this.sendToServer(found))
-                .catch(e => e instanceof AuthError ? console.log(e) : e);
-        });
+    async run() {
+        const found = await this.findUnsynced();
+        if (found.length < 1) {
+            return null;
+        }
+        const channel = await this.findChannelId();
+        const authenticated = await this.auth(channel);
+        if (!authenticated) {
+            return null;
+        }
+        return this.sendToServer(found);
     }
 
-    auth(channel) {
-        const data = channel ? { channel } : { anonymous: true };
-        return XHRRequest('POST', this.urlAuth, data)
-            .then(({ status, data }) => {
-                if(status !== 200) {
-                    throw new AuthError('status != 200');
-                }
-                if(!data.authenticated) {
-                    throw new AuthError('not authenticated');
-                }
-                return true;
-            });
+    async auth(channel) {
+        const params = channel ? { channel } : { anonymous: true };
+        const { status, data } = await xhrRequest('POST', this.urlAuth, params);
+        if (status !== 200) {
+            console.log('AuthError: status != 200');
+            return false;
+        }
+        if (!data.authenticated) {
+            console.log('AuthError: not authenticated');
+            return false;
+        }
+        return true;
     }
 
     findChannelId() {
-        return new Promise((resolve) =>
+        return new Promise(resolve =>
             this.storage.get('##ytchan', data =>
-                resolve(data['##ytchan'] || null )));
+                resolve(data['##ytchan'] || null)));
     }
 
-    sendInfo([videoID, info]) {
+    async sendInfo([videoID, info]) {
         const url = `${this.urlReport}${videoID}/`;
+        const { status, data } = await xhrRequest('PUT', url, info.fragments);
 
-        return new Promise((resolve) => {
-
-            return XHRRequest('PUT', url, info.fragments)
-                .then(({ status, data }) => {
-                    if (status === 200 && data && data.updated) {
-                        this.markAsSubmitted(videoID, info);
-                    }
-                    return null;
-                });
-
-        });
+        if (status === 200 && data && data.updated) {
+            this.markAsSubmitted(videoID, info);
+        }
+        return null;
     }
 
     sendToServer(items) {
-        console.log("SENDING TO SERVER");
-        const sendInfo = (i) => this.sendInfo(i);
+        console.log('SENDING TO SERVER');
+        const sendInfo = i => this.sendInfo(i);
 
         return Promise.sequentially(items.map(sendInfo));
     }
@@ -96,24 +87,9 @@ class Sync {
                 return;
             }
             this.storage.set({
-                [videoID]: Object.assign({}, info, {submitted: true})
-            })
+                [videoID]: Object.assign({}, info, { submitted: true }),
+            });
         });
     }
 
 }
-
-class AuthError extends Error { }
-
-
-chrome.alarms.create('sync', { periodInMinutes: SYNC_ALARM_PERIOD });
-
-chrome.alarms.onAlarm.addListener((alarm) => {
-    if (alarm.name !== 'sync') {
-        return;
-    }
-
-    const sync = new Sync();
-    sync.run();
-});
-

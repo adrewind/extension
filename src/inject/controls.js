@@ -1,7 +1,9 @@
+import { NoElementError } from './common';
 
-class AdditionalControls {
 
-    constructor() {
+export default class AdditionalControls {
+
+    constructor(player) {
         const svg = `
             <svg id="Mark_AD" data-name="Mark AD" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
                 <defs><style>.mrkad-1{fill:#fff;}.mrkad-2{fill:none;stroke:#f12b24;stroke-miterlimit:10;stroke-width:2px;}</style></defs>
@@ -12,13 +14,11 @@ class AdditionalControls {
                 <line class="mrkad-2" x1="12.46" y1="24.49" x2="6.01" y2="24.49"/>
             </svg>`;
 
-
-        const found = adrElements.findRightControls();
-        if (!found) {
-            throw new NoElementError("Right control panel is not found");
+        if (!player.rightControls) {
+            throw new NoElementError('Right control panel is not found');
         }
 
-        this.controls = found;
+        this.controls = player.rightControls;
         this.button = this.addPlayerButton('Отметить рекламу', svg);  // TODO: i18n
     }
 

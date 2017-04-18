@@ -4,7 +4,11 @@ Feature: Icon in right panel of Youtube player
   In order to access ad cut menu
   I should be able to see ᏆAD icon
 
+  Background:
+    Given Local storage state is "{'###guide': 3}"
+
   Scenario: Trying to open
     Given I am watch "mKzLoZFz8PE" video
-    When I click ".adr-mark-ad-button" element
+    And I skip In-Stream ad if it needed
+    When I click AD button
     Then I should see ".adr-ad-sel-menu" element
