@@ -27,6 +27,7 @@ class ExtensionBuilder {
     }
 
     setOutput() {
+        if (!fs.existsSync(this.outdir)) { fs.mkdirSync(this.outdir); }
         const latest = fs.createWriteStream(path.join(this.outdir, 'latest.zip'));
         const output = fs.createWriteStream(path.join(this.outdir, this.outfile));
 
