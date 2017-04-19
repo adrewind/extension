@@ -1,6 +1,6 @@
 import xhrRequest from './xhr';
 import { localStorage } from '../common/storage';
-import { API_ENDPOINT_REPORTS, SYNC_MATURITY_TRESHOLD } from './config';
+import { API_ENDPOINT_REPORTS, SYNC_MATURITY_TRESHOLD } from '../config';
 // TODO: check if there is not enough storage, delete old synced items
 
 // TODO: move it to helpers
