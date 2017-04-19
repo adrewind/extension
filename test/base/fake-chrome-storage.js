@@ -41,12 +41,11 @@ class FakeChromeStorage {
         }
     }
 
-    delete(key, callback) {
-        const allowed = this.getFilter(key);
+    remove(key, callback) {
+        const allowed = FakeChromeStorage.getFilter(key);
         Object.keys(this.storage)
               .filter(allowed)
               .forEach((k) => { delete this.storage[k]; });
-        // TODO: check if original function sends something to callback
         callback();
     }
 
