@@ -1,4 +1,5 @@
 import xhrRequest from './xhr';
+import { localStorage } from '../common/storage';
 import { API_ENDPOINT_REPORTS, SYNC_MATURITY_TRESHOLD } from './config';
 // TODO: check if there is not enough storage, delete old synced items
 
@@ -11,23 +12,23 @@ Promise.sequentially = iterable =>
 export default class Sync {
 
     constructor() {
-        this.storage = chrome.storage.local;
+        this.storage = localStorage;
         this.urlAuth = `${API_ENDPOINT_REPORTS}/auth/`;
         this.urlReport = `${API_ENDPOINT_REPORTS}/ad-report/`;
     }
 
-    findUnsynced() {
+    async findUnsynced() {
         const treshold = SYNC_MATURITY_TRESHOLD * 60; // minutes to seconds
         const provenUntil = new Date() - treshold;
 
         const isTimeProven = ([, info]) => info.updated < provenUntil;
         const isNotSubmitted = ([, info]) => !info.submitted;
 
-        return new Promise((resolve) => {
-            this.storage.get(null, data => resolve(Object.entries(data)
-                                                         .filter(isNotSubmitted)
-                                                         .filter(isTimeProven)));
-        });
+        const all = await this.storage.get(null);
+
+        return Object.entries(all)
+            .filter(isNotSubmitted)
+            .filter(isTimeProven);
     }
 
     async run() {
@@ -57,10 +58,9 @@ export default class Sync {
         return true;
     }
 
-    findChannelId() {
-        return new Promise(resolve =>
-            this.storage.get('##ytchan', data =>
-                resolve(data['##ytchan'] || null)));
+    async findChannelId() {
+        const found = await this.storage.get('##ytchan');
+        return found['##ytchan'] || null;
     }
 
     async sendInfo([videoID, info]) {
@@ -68,9 +68,11 @@ export default class Sync {
         const { status, data } = await xhrRequest('PUT', url, info.fragments);
 
         if (status === 200 && data && data.updated) {
-            this.markAsSubmitted(videoID, info);
+            await this.markAsSubmitted(videoID, info);
         }
-        return null;
+        if (status === 200 && data && data.error) {
+            await this.deleteVideo(videoID);
+        }
     }
 
     sendToServer(items) {
@@ -80,16 +82,19 @@ export default class Sync {
         return Promise.sequentially(items.map(sendInfo));
     }
 
-    markAsSubmitted(videoID, info) {
-        this.storage.get(videoID, (data) => {
-            const found = data[videoID];
-            if (String(info.fragments) !== String(found.fragments)) {
-                return;
-            }
-            this.storage.set({
-                [videoID]: Object.assign({}, info, { submitted: true }),
-            });
+    async markAsSubmitted(videoID, info) {
+        const data = await this.storage.get(videoID);
+        const found = data[videoID];
+        if (String(info.fragments) !== String(found.fragments)) {
+            return null;
+        }
+        return this.storage.set({
+            [videoID]: Object.assign({}, info, { submitted: true }),
         });
+    }
+
+    deleteVideo(videoID) {
+        return this.storage.remove(videoID);
     }
 
 }
