@@ -6,7 +6,7 @@ www.adrewind.net
 AdRewind is a browser plugin, that helps you skip any fragment of YouTube video which you will recognize as an advertisement.
 When you select an ad fragment it will be sent to server and other people never see this ad again.
 
-# How to build
+## How to build
 
 ```bash
 # clone repo
@@ -20,3 +20,9 @@ npm run build
 # try to test builded extension
 npm test
 ```
+
+## Supported browsers
+
+Now plugin supported by Chrome 55+, YandexBrowser 17+.
+
+We are planning to extend browser support after breaking the threshold of 5k users.
