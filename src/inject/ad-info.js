@@ -1,5 +1,5 @@
 import proxyXHR from './xhr';
-import { API_ENDPOINT_VIDEOS } from './config';
+import { API_ENDPOINT_VIDEOS } from '../config';
 
 
 // TODO: Use async / await

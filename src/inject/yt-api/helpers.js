@@ -1,4 +1,4 @@
-import { ELEMENT_LOCATE_FREQ } from '../config';
+import { ELEMENT_LOCATE_FREQ } from '../../config';
 
 
 export default async function untilLocated(locateFunc) {
