@@ -140,15 +140,6 @@ class ADRGuide {
 // document.getElementsByClassName('close-button')[0].click()
 
 export default async function showGuide(player) {
-    // const hash = window.location.hash;
-    //
-    // if (hash.match(/adr-no-guide/ig)) {
-    //     return;
-    // }
+    await player.ads.untilEnds();
     chrome.adrGuide = new ADRGuide(player);
-
-    // guide.showHint('guide-hello', 'en');
-    // guide.stickTo(adButton);
-
-    // guide.showScreen('guide-hello', 'ru');
 }

@@ -20,9 +20,8 @@ Feature: Ad fragment selection
     Given I am watch "4oqfodY2Lz0" video
     And I skip In-Stream ad if it needed
     When I click AD button
-    # TODO: following v
-    # And I move mouse out of player
-    And I wait "5" seconds
+    And I move mouse out of player
+    And I wait "3" seconds
     Then I should see ".adr-ad-sel-menu" element
 
   Scenario: Disable annotations while selection bar is activated
@@ -30,6 +29,8 @@ Feature: Ad fragment selection
     And I skip In-Stream ad if it needed
     When I enable annotations
     And I click AD button
+    # TODO: increase readability, analyse waits and move them to js if it possible
+    And I wait "1" seconds
     Then Annotations must be disabled
 
     When I click AD button

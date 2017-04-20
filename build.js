@@ -63,7 +63,8 @@ class ExtensionBuilder {
     await postcssBuild();
     fs.writeFileSync(config.bundle.bgHTML, fs.readFileSync(config.entry.bgHTML));
 
-    const builder = new ExtensionBuilder('build', `extension-${npmPackage.version}.zip`);
+    const type = process.env.NODE_ENV === 'production' ? '-prod' : '';
+    const builder = new ExtensionBuilder('build', `extension-${npmPackage.version}${type}.zip`);
     // const builder = new ExtensionBuilder('build/extension.zip');
     // builder.addResource('icons');
     builder.build();
