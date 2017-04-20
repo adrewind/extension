@@ -1,3 +1,5 @@
+import { ELEMENT_LOCATE_FREQ } from '../../config';
+
 
 export default class PlayerAds {
 
@@ -21,6 +23,22 @@ export default class PlayerAds {
         }
 
         return content[0].classList.contains('videoAdUi');
+    }
+
+    untilEnds() {
+        return new Promise((resolve) => {
+            let interval;
+
+            const wait = () => {
+                if (this.isShowing()) {
+                    return;
+                }
+                resolve();
+                clearInterval(interval);
+            };
+
+            interval = setInterval(wait, ELEMENT_LOCATE_FREQ);
+        });
     }
 
 }
