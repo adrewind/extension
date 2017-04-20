@@ -9,9 +9,10 @@ Feature: Entry points
 
   Scenario: Main page as entry point
     Given I on the "https://www.youtube.com/" page
+    And I click on first suggested video
+    And I wait "2" seconds
     And I skip In-Stream ad if it needed
-    When I click on first suggested video
-    And I pause the video
+    When I pause the video
     Then I should see AD button
 
   Scenario: Video as an entry point
