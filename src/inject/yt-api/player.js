@@ -18,8 +18,8 @@ export default class Player {
      */
     async init() {
         // FIXME: VideoLink appears after 1.5 seconds, it's too slow, find better way
+        this.vidlink = null;
         this.video = await Player.untilVideoAppears();
-        this.vidlink = await Player.untilVideoLinkAppears();
 
         this.ads = new PlayerAds();
         this.events = new PlayerEvents(this.video);
@@ -27,6 +27,8 @@ export default class Player {
 
         this.rightControls = Player.findRightControls();
         this.controlsContainer = Player.findControlsContainer();
+
+        Player.untilVideoLinkAppears().then((link) => { this.vidlink = link; });
     }
 
     static findVideoTag() {
@@ -59,7 +61,7 @@ export default class Player {
             return url.searchParams.get('v');
         }
 
-        const videoUrl = this.vidlink.href;
+        const videoUrl = this.vidlink ? this.vidlink.href : document.URL;
         return parseYouTubeID(videoUrl);
     }
 
