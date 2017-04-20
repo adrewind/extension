@@ -9,7 +9,7 @@
   "scripts": {
     "build": "node build",
     "lint": "node_modules/.bin/eslint .",
-    "test": "npm run  --silent test-mocha && npm run --silent test-cucumber",
+    "test": "npm run --silent test-mocha && npm run --silent test-cucumber",
     "test-mocha": "mocha --compilers js:babel-core/register --require test/base",
     "test-cucumber": "node_modules/.bin/cucumber-js"
   },
