@@ -15,14 +15,6 @@ defineSupportCode((functions) => {
         return this.driver.get(url);
     });
 
-    when('I pause the video', async function _when() {
-        const query = { css: '.html5-main-video' };
-        const condition = until.elementLocated(query);
-        const element = await this.driver.wait(condition, WAIT_VIDEO_LOAD);
-
-        await this.driver.executeScript('arguments[0].pause()', element);
-    });
-
     given('I skip In-Stream ad if it needed', async function _given() {
         const query = { css: '.ad-container > .videoAdUi' };
         const condition = until.elementLocated(query);
@@ -43,6 +35,24 @@ defineSupportCode((functions) => {
             const queryNoskipAd = until.stalenessOf(container);
             await this.driver.wait(queryNoskipAd, YT_UNSKIPABLE_WAIT);
         }
+    });
+
+    when('I move mouse out of player', async function _when() {
+        const query = { css: '#container,#watch-header' };
+        const condition = until.elementLocated(query);
+        const element = await this.driver.wait(condition, WAIT_LOCATED);
+
+        const actions = this.driver.actions();
+        const move = actions.mouseMove(element);
+        await move.perform();
+    });
+
+    when('I pause the video', async function _when() {
+        const query = { css: '.html5-main-video' };
+        const condition = until.elementLocated(query);
+        const element = await this.driver.wait(condition, WAIT_VIDEO_LOAD);
+
+        await this.driver.executeScript('arguments[0].pause()', element);
     });
 
     when('I click on first suggested video', async function _when() {
