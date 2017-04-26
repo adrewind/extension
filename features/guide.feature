@@ -15,8 +15,6 @@ Feature: Guide
     And I skip In-Stream ad if it needed
     When I wait "3" seconds
     And I click ".adr-guide-container .screen-image" element
-    # TODO: Keep controls shown even if video is playing
-    And I pause the video
     Then I should see ".adr-mark-ad-button.adr-pulse" element
 
   Scenario: Highlight clickable area
@@ -25,8 +23,6 @@ Feature: Guide
     When I wait "2" seconds
     And I click ".adr-guide-container .screen-image" element
     And I skip In-Stream ad if it needed
-    # TODO: Keep controls shown even if video is playing
-    And I pause the video
     And I click ".adr-mark-ad-button.adr-pulse" element
     Then I should see ".adr-ad-help-text.highlight" element
     And I wait "2" seconds
@@ -40,8 +36,6 @@ Feature: Guide
     And I click ".adr-guide-container .screen-image" element
     And I reload the page
     And I wait "2" seconds
-    # TODO: Keep controls shown even if video is playing
-    And I pause the video
     Then I should see ".adr-mark-ad-button.adr-pulse" element
 
   Scenario: Playhead help text
