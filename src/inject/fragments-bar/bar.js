@@ -16,7 +16,6 @@ export default class FragmentSelectionBar {
         this.video = player.video;
         this.container = player.controlsContainer;
         this.annotations = player.annotations;
-        this.annotations.findToggle();
 
         this.keepObserver = null;
         this.fragments = [];
