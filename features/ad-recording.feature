@@ -30,9 +30,7 @@ Feature: Ad fragment selection
     When I enable annotations
     And I click AD button
     # TODO: increase readability, analyse waits and move them to js if it possible
-    And I wait "1" seconds
     Then Annotations must be disabled
-
     When I click AD button
     Then Annotations must be enabled
 
