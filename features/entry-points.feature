@@ -23,7 +23,6 @@ Feature: Entry points
 
   Scenario: Playlist as an entry point
     Given I on the "https://www.youtube.com/results?q=best+coub&sp=CAMSAhAD" page
-    And I skip In-Stream ad if it needed
     When I click on first suggested video
     And I pause the video
     Then I should see AD button
