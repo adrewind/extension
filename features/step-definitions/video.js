@@ -1,14 +1,17 @@
+const chai = require('chai');
 const { until } = require('selenium-webdriver');
 const { defineSupportCode } = require('cucumber');
 const { shouldSeeElement } = require('./common');
 const { WAIT_LOCATED, WAIT_VIDEO_LOAD,
         YT_UNSKIPABLE_WAIT, YT_SKIP_WAIT } = require('../support/constants');
 
+chai.should();
+
 
 defineSupportCode((functions) => {
     const given = functions.Given;
     const when = functions.When;
-    // const then = functions.Then;
+    const then = functions.Then;
 
     given('I am watch {stringInDoubleQuotes} video', function _given(videoID) {
         const url = `https://www.youtube.com/watch?v=${videoID}`;
@@ -62,5 +65,17 @@ defineSupportCode((functions) => {
         const thumbnail = await this.driver.wait(condition, WAIT_LOCATED);
 
         await thumbnail.click();
+    });
+
+    then('Current time in player shall be updating', async function _then() {
+        const query = { css: '.ytp-time-current' };
+        const condition = until.elementLocated(query);
+        const element = await this.driver.wait(condition, WAIT_LOCATED);
+
+        const before = element.getText();
+        await this.driver.sleep(2000);
+        const after = element.getText();
+
+        after.should.be.not.equal(before);
     });
 });

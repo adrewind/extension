@@ -24,6 +24,13 @@ Feature: Ad fragment selection
     And I wait "3" seconds
     Then I should see ".adr-ad-sel-menu" element
 
+  Scenario: Current time shall be updating
+    Given I am watch "4oqfodY2Lz0" video
+    And I skip In-Stream ad if it needed
+    When I click AD button
+    And I move mouse out of player
+    Then Current time in player shall be updating
+
   Scenario: Disable annotations while selection bar is activated
     Given I am watch "2vMH8lITTCE" video
     And I skip In-Stream ad if it needed
