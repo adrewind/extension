@@ -73,7 +73,7 @@ defineSupportCode((functions) => {
         const element = await this.driver.wait(condition, WAIT_LOCATED);
 
         const before = element.getText();
-        await this.driver.wait(2000);
+        await this.driver.sleep(2000);
         const after = element.getText();
 
         after.should.be.not.equal(before);
