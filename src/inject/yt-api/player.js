@@ -2,6 +2,7 @@ import User from './user';
 import PlayerAds from './player-ads';
 import untilLocated from './helpers';
 import PlayerEvents from './player-events';
+import PlayerTimeline from './player-timline';
 import PlayerAnnotations from './player-annotations';
 
 
@@ -23,6 +24,7 @@ export default class Player {
 
         this.ads = new PlayerAds();
         this.events = new PlayerEvents(this.video);
+        this.timeline = new PlayerTimeline(this.video);
         this.annotations = new PlayerAnnotations();
 
         this.rightControls = Player.findRightControls();

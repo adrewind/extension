@@ -10,3 +10,13 @@ script:
   - npm run --silent lint
   - npm run --silent test-mocha
   - npm run --silent test-cucumber
+before_deploy:
+  - export NODE_ENV=production
+  - npm run --silent build
+deploy:
+  provider: releases
+  api_key:
+    secure: "KwCrZGmZkMt2+cQiCWfs7F1uomD17V6TkyqDOYo4NLUUN60lpPRRKPea1NSOOJyn+TegkvvHwq2/DAXM/nqND9xh7qVcQruOf0Mdx50OXScsOrJYi9C6AFGfjrNOSAUe75FlDxNb3pSX3P4oOse770bhKiUDH9shBsD2qZF189MC3ge9EDWFv5eHQHOXG5zvN8NMseHZdusgEgCzx37s1fmdCrP/PVhfuLNn7ZqjaQq1+67erKKHcfdQrN71j6AqN64yUq58lmgZQi75i9Tge/TYeH5HJzddMmCSw/426oviwRTq2Nc/1wHsixv9MhnboPhg/8EPEZZHn94GtpWQ1RJTwIvARofNDIaHV34QiXV+4pL3pQZdtGIK3PA10W/KIZnWjIkDLX9GBnTK6etACMxglDy84J0MzJcRyiXNVBgeteJEcaTdWnH95nZpJ9TW6NNuAGBr2BDzhGPbciNTivZkwy87NpxrYTFTOQbeG42Uanf/n1/L1Ww4WUBognu4+UNxgPCJHjZ4bxdpZ/K6K0tcSGXM+wJxy3dkcAG0JRWuCTv3Q4fFuqtG+q5W4Dni1oXLhBhsRsr0FmZ2hXExZgiPHhsc0lzJe1Ttv3afymC/zzJtypiyySUwa2/h0dIwFLI6JUjSi1vVUsbSKKrLh68Nvs9Ti/0wiKzBkPtijGg="
+  file: "latest.zip"
+  on:
+    tags: true

@@ -44,6 +44,7 @@ export default class FragmentSelectionBar {
 
     // Prevents hiding controls by Player due to inactivity or mouseout
     keepShown() {
+        this.player.timeline.startUpdate();
         this.keepObserver = this.player.events.controlsHidden(() => {
             const container = this.player.events.playerContainer;
             container.classList.remove('ytp-autohide');
@@ -51,8 +52,11 @@ export default class FragmentSelectionBar {
     }
 
     canBeHidden() {
-        if (!this.keepObserver) { return; }
-        this.keepObserver.disconnect();
+        this.player.timeline.stopUpdate();
+
+        if (this.keepObserver) {
+            this.keepObserver.disconnect();
+        }
     }
 
     isShown() {
