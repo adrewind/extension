@@ -6,11 +6,11 @@ export default class PlayerTimeline {
         this.currentEl = document.getElementsByClassName('ytp-time-current')[0];
         this.progressEl = document.getElementsByClassName('ytp-play-progress')[0];
 
-        const freeze = () => this.timer && clearTimeout(this.timer);
-        const unfreeze = () => this.timer && this.updateTick();
+        const freezeUpdate = () => this.timer && clearTimeout(this.timer);
+        const unfreezeUpdate = () => this.timer && this.updateTick();
 
-        this.video.addEventListener('pause', freeze);
-        this.video.addEventListener('play', unfreeze);
+        this.video.addEventListener('pause', freezeUpdate);
+        this.video.addEventListener('play', unfreezeUpdate);
     }
 
     startUpdate() {

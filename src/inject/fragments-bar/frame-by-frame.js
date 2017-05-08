@@ -40,26 +40,27 @@ export default class FrameByFrameControls {
     }
 
     passInteractions() {
-        const pass = (e) => {
+        const omitEvent = (e) => {
             e.preventDefault();
             e.stopPropagation();
         };
 
         const click = (e, direction) => {
-            pass(e);
+            omitEvent(e);
             this.onstep(direction);
         };
 
-        this.element.addEventListener('click', pass);
-        this.element.addEventListener('mousedown', pass);
+        // TODO: Better name for pass
+        this.element.addEventListener('click', omitEvent);
+        this.element.addEventListener('mousedown', omitEvent);
 
         this.elBack.addEventListener('click', e => click(e, 'back'));
-        this.elBack.addEventListener('mousedown', pass);
-        this.elBack.addEventListener('dblclick', pass);
+        this.elBack.addEventListener('mousedown', omitEvent);
+        this.elBack.addEventListener('dblclick', omitEvent);
 
         this.elForward.addEventListener('click', e => click(e, 'forth'));
-        this.elForward.addEventListener('mousedown', pass);
-        this.elForward.addEventListener('dblclick', pass);
+        this.elForward.addEventListener('mousedown', omitEvent);
+        this.elForward.addEventListener('dblclick', omitEvent);
     }
 
     handleOut() {

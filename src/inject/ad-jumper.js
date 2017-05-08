@@ -44,11 +44,12 @@ export default class ADJumper {
     }
 
     handleEvents() {
-        this.video.addEventListener('timeupdate', () => this.onTimeUpdate());
+        // TODO: Better name for onTimeUpdate
+        this.video.addEventListener('timeupdate', () => this.skipIfNeeded());
         this.handleBackAndForward();
     }
 
-    onTimeUpdate() {
+    skipIfNeeded() {
         if (!this.active) {
             return;
         }

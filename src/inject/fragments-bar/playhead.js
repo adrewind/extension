@@ -32,7 +32,7 @@ export default class Playhead {
             return Math.max(min, Math.min(max, value));
         }
 
-        const mousemove = (e) => {
+        const emitChange = (e) => {
             e.preventDefault();
 
             const rect = this.container.getBoundingClientRect();
@@ -43,20 +43,22 @@ export default class Playhead {
             this.onchange(value);
         };
 
-        const mouseup = (e) => {
+        const unsubscribe = (e) => {
             e.preventDefault();
 
             this.onchanged();
-            this.body.removeEventListener('mouseup', mouseup);
-            this.body.removeEventListener('mousemove', mousemove);
+            this.body.removeEventListener('mouseup', unsubscribe);
+            this.body.removeEventListener('mousemove', emitChange);
         };
 
-        this.element.addEventListener('mousedown', (e) => {
+        const subscribe = (e) => {
             e.preventDefault();
 
-            this.body.addEventListener('mouseup', mouseup);
-            this.body.addEventListener('mousemove', mousemove);
-        });
+            this.body.addEventListener('mouseup', unsubscribe);
+            this.body.addEventListener('mousemove', emitChange);
+        };
+
+        this.element.addEventListener('mousedown', subscribe);
     }
 
     setConstrains(left, right) {

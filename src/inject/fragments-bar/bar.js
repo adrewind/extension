@@ -107,24 +107,24 @@ export default class FragmentSelectionBar {
         this.helpText.innerText = chrome.i18n.getMessage('button_stop_recording');
         this.recording = true;
 
-        const timeupdate = () => {
+        const movePlayhead = () => {
             fragment.setEndPosition(this.video.currentTime);
             fragment.redraw();
         };
 
-        const pause = () => {
+        const stopRecording = () => {
             this.onchanged();
-            this.video.removeEventListener('ended', pause);
-            this.video.removeEventListener('pause', pause);
-            this.video.removeEventListener('timeupdate', timeupdate);
+            this.video.removeEventListener('ended', stopRecording);
+            this.video.removeEventListener('pause', stopRecording);
+            this.video.removeEventListener('timeupdate', movePlayhead);
             this.helpText.innerText = chrome.i18n.getMessage('button_add_new_fragment');
             this.recording = false;
         };
 
-        fragment.onRemove(pause);
-        this.video.addEventListener('ended', pause);
-        this.video.addEventListener('pause', pause);
-        this.video.addEventListener('timeupdate', timeupdate);
+        fragment.onRemove(stopRecording);
+        this.video.addEventListener('ended', stopRecording);
+        this.video.addEventListener('pause', stopRecording);
+        this.video.addEventListener('timeupdate', movePlayhead);
     }
 
     handleBarClick() {

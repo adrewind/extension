@@ -68,13 +68,13 @@ class ADRGuide {
     showButtonPulse() {
         this.adButton.classList.add('adr-pulse');
 
-        const nopulse = () => {
+        const removePulse = () => {
             this.adButton.classList.remove('adr-pulse');
-            this.adButton.removeEventListener('adr-click', nopulse);
+            this.adButton.removeEventListener('adr-click', removePulse);
 
             this.highlightBar(); // TODO: Find better place for it
         };
-        this.adButton.addEventListener('click', nopulse);
+        this.adButton.addEventListener('click', removePulse);
     }
 
     highlightBar() {
@@ -104,7 +104,7 @@ class ADRGuide {
             this.viewer.element.removeEventListener('click', showRemovingHelp);
         };
 
-        const showPlayheadHelp = () => {
+        const showPlayheadHint = () => {
             const playhead = document.getElementsByClassName('adr-playhead-right')[0];
             if (!playhead) {
                 return;
@@ -116,20 +116,21 @@ class ADRGuide {
             this.viewer.element.addEventListener('click', showRemovingHelp);
         };
 
-        const secondClick = (e) => {
+        const showHintAndOmitEvent = (e) => {
             e.preventDefault();
             e.stopPropagation();
 
-            showPlayheadHelp();
-            this.helpText.removeEventListener('click', secondClick);
+            showPlayheadHint();
+            this.helpText.removeEventListener('click', showHintAndOmitEvent);
         };
 
-        const firstClick = () => {
-            this.helpText.addEventListener('click', secondClick);
-            this.helpText.removeEventListener('click', firstClick);
+        const waitRecordingEnds = () => {
+            // TODO: Do not trust first and second click, use
+            this.helpText.addEventListener('click', showHintAndOmitEvent);
+            this.helpText.removeEventListener('click', waitRecordingEnds);
         };
 
-        this.helpText.addEventListener('click', firstClick);
+        this.helpText.addEventListener('click', waitRecordingEnds);
     }
 
 }

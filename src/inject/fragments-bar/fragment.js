@@ -19,7 +19,7 @@ export default class FragmentSelection {
         this.leftNeightbor = null;
         this.rightNeightbor = null;
 
-        this.handleDrag();
+        this.addDeletionGesture();
     }
 
     createElement() {
@@ -37,6 +37,7 @@ export default class FragmentSelection {
         this.leftPlayhead.ondblclick = () => this.leftFrameByFrame.show();
         this.rightPlayhead.ondblclick = () => this.rightFrameByFrame.show();
 
+        // TODO: Move to playhead
         this.leftFrameByFrame = new FrameByFrameControls(this.video, this.leftPlayhead.element);
         this.rightFrameByFrame = new FrameByFrameControls(this.video, this.rightPlayhead.element);
 
@@ -83,11 +84,10 @@ export default class FragmentSelection {
         this.end = time;
     }
 
-    // Deletion gesture
-    handleDrag() {
+    addDeletionGesture() {
         let pos = 0;
 
-        const mousemove = (e) => {
+        const shiftSelection = (e) => {
             e.preventDefault();
 
             const distance = Math.min(e.clientY - pos, 0);
@@ -101,7 +101,7 @@ export default class FragmentSelection {
             e.preventDefault();
 
             body.removeEventListener('mouseup', mouseup);
-            body.removeEventListener('mousemove', mousemove);
+            body.removeEventListener('mousemove', shiftSelection);
 
             const alive = this.element.style.opacity > 0.1 || this.element.style.opacity === '';
             if (!alive) {
@@ -130,8 +130,9 @@ export default class FragmentSelection {
             }
 
             this.element.style.transition = '';
+            // TODO: Better name for mouseup
             body.addEventListener('mouseup', mouseup);
-            body.addEventListener('mousemove', mousemove);
+            body.addEventListener('mousemove', shiftSelection);
         });
     }
 
